@@ -1,0 +1,19 @@
+# Machine-specific and regenerable. Nothing here belongs in the repo:
+# .venv is ~150 MB of absolute paths that only work on the machine that made
+# it, and everything else is rebuilt by running the project.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Secrets. .env.example is tracked; .env is not.
+.env
+
+# Render caches and run logs, both rebuilt on the next render.
+temp/
+logs/
+
+# Windows / macOS shell droppings.
+Thumbs.db
+desktop.ini
+.DS_Store

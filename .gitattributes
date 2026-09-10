@@ -1,0 +1,18 @@
+# Normalise line endings in the repo, check out native on each machine.
+# Without this, editing on Windows and Linux shows whole files as changed.
+* text=auto
+
+# Windows-only scripts must keep CRLF or cmd.exe mis-parses them.
+*.bat text eol=crlf
+# Shell scripts must keep LF or they fail with "bad interpreter: ^M".
+*.sh  text eol=lf
+
+# Binary: never touch these.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.mp3  binary
+*.mp4  binary
+*.wav  binary
+*.ttf  binary
+*.otf  binary

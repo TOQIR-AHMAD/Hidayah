@@ -1,0 +1,21 @@
+# Quran Video Generator - Surah Al-Fatihah
+# Python 3.11+
+
+pillow>=11.0
+pydantic>=2.7
+pyyaml>=6.0
+rich>=13.7
+pytest>=8.0
+
+# Text shaping: HarfBuzz + FreeType give correct Arabic joining,
+# Quranic diacritic (harakat) placement and Urdu Nastaliq rendering.
+uharfbuzz>=0.39
+freetype-py>=2.4
+
+# Fallback shaping path (used only when uharfbuzz/freetype-py are unavailable)
+arabic-reshaper>=3.0
+python-bidi>=0.4.2
+
+# Provides a bundled FFmpeg binary when FFmpeg is not installed system-wide.
+# Remove this if you install FFmpeg yourself and put it on PATH.
+imageio-ffmpeg>=0.5
