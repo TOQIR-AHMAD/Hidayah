@@ -627,25 +627,64 @@ def test_each_highlighted_word_is_switched_on_for_its_own_span(job, prepared):
     if not config.content.word_highlight:
         pytest.skip("word highlighting is off in this config")
 
-    spans = re.findall(r"enable='gte\(t,([\d.]+)\)\*lt\(t,([\d.]+)\)'", job.filter_graph)
+    spans = _highlight_spans(job.filter_graph)
     words = sum(len(a.arabic.split()) for a in surah.ayahs)
     assert len(spans) == words
     for start, end in spans:
-        assert float(end) > float(start)
+        assert end > start
+
+
+def _highlight_spans(graph):
+    """(fade-in start, fade-out start) for every word highlight in the graph.
+
+    The highlight is gated by its alpha envelope, not by `enable`: a hard
+    on/off makes the colour snap from word to word.
+
+    Scoped to chains that end in an [hlN] label - the card track uses the same
+    two fade filters, so matching them across the whole graph would count the
+    cards as highlights too.
+    """
+    pattern = (
+        r"fade=t=in:st=([\d.]+):d=[\d.]+:alpha=1,"
+        r"fade=t=out:st=([\d.]+):d=[\d.]+:alpha=1"
+        r"[^;]*?\[hl\d+\]"
+    )
+    return [(float(a), float(b)) for a, b in re.findall(pattern, graph)]
 
 
 def test_highlight_spans_are_bounded_by_the_video(job, prepared):
     _, _, _, timeline = prepared
-    spans = re.findall(r"enable='gte\(t,([\d.]+)\)\*lt\(t,([\d.]+)\)'", job.filter_graph)
-    for start, end in spans:
-        assert 0.0 <= float(start) < timeline.total_duration
-        assert 0.0 < float(end) <= timeline.total_duration + 0.001
+    for start, end in _highlight_spans(job.filter_graph):
+        assert 0.0 <= start < timeline.total_duration
+        assert 0.0 < end <= timeline.total_duration + 0.001
+
+
+def test_the_highlight_crossfades_between_words(job, prepared):
+    """Consecutive words are contiguous, so ramps kept inside their own window
+    would leave the line briefly unlit between every pair. Straddling the
+    boundary means one word is still going out as the next comes in."""
+    config, _, _, _ = prepared
+    if not config.content.word_highlight or config.theme.highlight_fade <= 0:
+        pytest.skip("the highlight is not faded in this config")
+
+    spans = _highlight_spans(job.filter_graph)
+    assert len(spans) > 1
+    # A word's ramp-down begins before the next word's ramp-up finishes.
+    overlaps = sum(
+        1 for (_, out_a), (in_b, _) in zip(spans, spans[1:]) if out_a <= in_b
+    )
+    assert overlaps == len(spans) - 1
+
+
+def test_the_highlight_is_not_gated_by_a_hard_switch(job):
+    """`enable` is binary - it would make the colour snap on and off."""
+    assert "enable=" not in job.filter_graph
 
 
 def test_highlights_are_overlaid_after_the_cards(job):
     """They sit on top of the card's own glyphs, so they have to come later."""
     graph = job.filter_graph
-    assert graph.index("[cards]") < graph.index("enable='gte(t,")
+    assert graph.index("[cards]") < graph.index("[hl0]")
 
 
 def test_a_highlight_rides_the_same_rise_as_its_card(job):
@@ -674,7 +713,7 @@ def test_no_highlight_inputs_when_the_feature_is_off(prepared, tmp_path):
         request, background, is_video, renderer._prepare_layers(request, asset_dir),
         cards, windows, words, highlights,
     ).filter_graph
-    assert "enable='gte(t," not in graph
+    assert "[hl0]" not in graph
 
 
 def test_highlight_pngs_are_cropped_not_full_frame(prepared, tmp_path):

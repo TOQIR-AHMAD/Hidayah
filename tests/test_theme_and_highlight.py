@@ -309,6 +309,7 @@ def test_the_capsule_does_not_erase_the_line_above(config, surah, real_fonts_dir
     the tops off the harakat of the line above it."""
     config.theme.style = "glass"
     config.content.word_highlight = True
+    config.theme.highlight_pill_enabled = True
     config.theme.highlight_pill_opacity = 1.0
     config.theme.highlight_glow_enabled = False
 
@@ -357,3 +358,31 @@ def test_validate_is_quiet_about_artwork_in_other_styles(config):
     check = next(c for c in validator.checks if c.name == "Background")
     assert "glass" not in check.detail
     assert not any("plain plate" in hint for hint in validator.hints)
+
+
+def test_the_shipped_highlight_is_bare_coloured_text():
+    """What was asked for: the word's own letters change colour, with nothing
+    drawn around it - no capsule, no box, no border."""
+    from pathlib import Path
+
+    from app.config import load_config
+
+    root = Path(__file__).resolve().parents[1]
+    theme = load_config(root / "config.yaml", root=root).theme
+
+    assert theme.highlight_pill_enabled is False
+    # An amber/yellow, not the text colour: it has to read as a different word.
+    red, green, blue = (
+        int(theme.highlight_color.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)
+    )
+    assert red > 200 and green > 150 and blue < 140, theme.highlight_color
+    assert red - blue > 80, "the highlight is not distinctly warm"
+
+
+def test_the_shipped_highlight_fades_rather_than_snapping():
+    from pathlib import Path
+
+    from app.config import load_config
+
+    root = Path(__file__).resolve().parents[1]
+    assert load_config(root / "config.yaml", root=root).theme.highlight_fade > 0

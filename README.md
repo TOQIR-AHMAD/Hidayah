@@ -920,8 +920,9 @@ audio:
 
 ### Highlighting the word being recited
 
-Each word lights up as the reciter reaches it — a systemBlue capsule under it
-and the word itself in white.
+Each word turns amber as the reciter reaches it. Nothing is drawn around it —
+no box, no capsule, no underline; the word's own letters change colour, with a
+soft glow of the same colour so it lifts off the artwork.
 
 ```yaml
 content:
@@ -976,6 +977,22 @@ word_timings:
   min_seconds: 0.16   # a shorter highlight is a flicker, not a cue
   carry_over: 0.65    # how far it holds into the silence after a word
 ```
+
+And how it looks and moves:
+
+```yaml
+theme:
+  highlight_color: "#FFD24A"      # the lit word
+  highlight_glow_opacity: 0.42
+  highlight_fade: 0.14            # seconds to arrive, and to leave
+  highlight_pill_enabled: false   # a capsule behind the word; off
+```
+
+`highlight_fade` is what makes the colour *travel*. The ramps straddle each
+word boundary rather than sitting inside it, so one word is still going out as
+the next comes in and the colour flows along the line. Set it to `0` for a hard
+cut. Internally this is an alpha envelope rather than FFmpeg's `enable`, which
+is binary and would snap.
 
 > **`text_fade_in` must not exceed `padding_before`.** A word can only be lit
 > while its card is fully opaque, so if the card is still fading in when the

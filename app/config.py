@@ -346,6 +346,12 @@ class ThemeSettings(BaseModel):
     highlight_glow_radius: int = 22
     highlight_glow_opacity: float = 0.55
 
+    # How long the colour takes to arrive on a word and leave it, in seconds
+    # before playback_speed. Consecutive words overlap by this much, so the
+    # colour flows along the line rather than jumping from word to word.
+    # 0 gives a hard cut.
+    highlight_fade: float = 0.14
+
     # A capsule behind the lit word.
     highlight_pill_enabled: bool = True
     highlight_pill_color: Hex = "#D8B871"

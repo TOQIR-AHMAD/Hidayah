@@ -380,14 +380,24 @@ theme:
 
   # The word currently being recited.
   #
+  # The word itself turns amber - no capsule, no box, nothing drawn around it.
   # The lit word is drawn over the card's own glyphs from the same shaping
-  # run, so it has to be opaque; the capsule behind it is systemBlue at the
-  # weight iOS uses for a selected row.
-  highlight_color: "#FFFFFF"
+  # run, so it covers them exactly and has to stay opaque.
+  highlight_color: "#FFD24A"
+
+  # A warm glow of the same colour, so the word lifts off the artwork without
+  # needing a shape behind it.
   highlight_glow_enabled: true
-  highlight_glow_radius: 14
-  highlight_glow_opacity: 0.28
-  highlight_pill_enabled: true
+  highlight_glow_radius: 20
+  highlight_glow_opacity: 0.42
+
+  # Seconds for the colour to arrive and to leave (before playback_speed).
+  # Consecutive words overlap by this much, so the colour flows along the line
+  # instead of jumping. 0 gives a hard cut.
+  highlight_fade: 0.14
+
+  # The capsule behind the lit word. OFF: the colour alone marks the word.
+  highlight_pill_enabled: false
   highlight_pill_color: "#FFFFFF"
   highlight_pill_opacity: 0.30
   highlight_pill_pad_x: 0.16

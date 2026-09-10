@@ -175,6 +175,9 @@ def _neutral(config: Config) -> Config:
     config.theme.frame_enabled = True
     config.theme.glow_enabled = True
     config.theme.text_shadow_enabled = False
+    # The delivery lights the word itself and draws nothing round it; the
+    # capsule tests need it back on.
+    config.theme.highlight_pill_enabled = True
     config.background.dim = 0.30
     config.background.blur = 6
     # The delivery names a specific plate in assets/backgrounds/; the throwaway

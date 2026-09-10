@@ -267,6 +267,39 @@ def alpha_fade(fade_in: float, fade_out: float, fade_out_start: float) -> str:
     return ",".join(parts)
 
 
+def timed_alpha(start: float, end: float, fade_in: float, fade_out: float) -> str:
+    """Alpha envelope for a layer that should only be visible from start to end.
+
+    Used instead of `overlay=...:enable=`, which is a hard on/off: a word would
+    snap into colour and snap out again. A still built by `still_source` carries
+    the timeline's own timestamps, so the ramps can be placed at absolute times
+    here, and `fade` holds alpha at zero outside them - one pair of ramps
+    therefore behaves as a window with soft edges.
+
+    Where consecutive words meet, one word's ramp down overlaps the next one's
+    ramp up, so the colour flows along the line instead of jumping.
+    """
+    span = max(0.0, end - start)
+    fade_in = max(0.0, fade_in)
+    fade_out = max(0.0, fade_out)
+
+    # Overlapping ramps would mean the layer never reaches full opacity.
+    total = fade_in + fade_out
+    if total > span and total > 0:
+        shrink = span / total
+        fade_in *= shrink
+        fade_out *= shrink
+
+    # fade rejects a zero duration, and a ramp shorter than a frame is a cut
+    # anyway - but the filter still has to be present to gate the layer.
+    floor = 0.001
+    return ",".join([
+        "format=rgba",
+        f"fade=t=in:st={_f(start)}:d={_f(max(fade_in, floor))}:alpha=1",
+        f"fade=t=out:st={_f(max(0.0, end - fade_out))}:d={_f(max(fade_out, floor))}:alpha=1",
+    ])
+
+
 def text_rise(start: float, rise_pixels: float, rise_duration: float) -> str:
     """Overlay y-expression: the card settles upward as it fades in.
 

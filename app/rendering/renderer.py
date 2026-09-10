@@ -516,13 +516,16 @@ class Renderer:
         current = "video"
 
         # --- word highlights -------------------------------------------------
-        # One overlay per word, switched on for its own span. Each rides the
-        # same rise as the card underneath it, so the lit word stays locked to
-        # the glyphs it is covering while the card is still settling.
+        # One overlay per word, faded in and out over its own span rather than
+        # switched on. Each rides the same rise as the card underneath it, so
+        # the lit word stays locked to the glyphs it is colouring while the card
+        # is still settling.
         if highlights and words:
             starts = {w.segment.index: w.start for w in windows}
             rise = animation.text_rise * h / 1080.0
             rise_duration = animation.scaled(animation.text_rise_duration)
+            speed = max(0.01, config.video.playback_speed)
+            fade = max(0.0, theme.highlight_fade) / speed
 
             for position, word in enumerate(words):
                 asset = highlights.get((word.ayah_number, word.word_index))
@@ -530,15 +533,27 @@ class Renderer:
                     continue
                 index = job.add_input(asset.path)
                 label = f"hl{position}"
+                # The ramps are placed on the timeline's own clock, so no
+                # `enable` is needed - the envelope is the window.
+                #
+                # The window is widened by half a fade at each end so the ramps
+                # STRADDLE the boundaries rather than sitting inside them.
+                # Consecutive words are contiguous, so ramps kept inside would
+                # leave the line briefly unlit between every pair; straddling
+                # them means one word is still going out as the next comes in,
+                # and the colour travels along the line.
+                lead = fade / 2.0
                 job.add_filter(
-                    f"[{index}:v:0]{anim.still_source(fps, total_frames)},setsar=1[{label}]"
+                    f"[{index}:v:0]{anim.still_source(fps, total_frames)},"
+                    f"{anim.timed_alpha(max(0.0, word.start - lead), word.end + lead, fade, fade)},"
+                    f"setsar=1[{label}]"
                 )
                 segment_start = starts.get(word.segment_index, word.start)
                 y_expr = anim.text_rise(segment_start, rise, rise_duration)
                 y = f"{asset.y}" if y_expr == "0" else f"{asset.y}+{y_expr}"
                 job.add_filter(
                     f"[{current}][{label}]"
-                    f"{anim.overlay_filter(str(asset.x), y, enable=(word.start, word.end))}"
+                    f"{anim.overlay_filter(str(asset.x), y)}"
                     f"[hlout{position}]"
                 )
                 current = f"hlout{position}"
