@@ -11,6 +11,7 @@ BISMILLAH = "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِ
 AYAH_SEVEN = (
     "صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ"
 )
+AN_NAS_FIVE = "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ"
 URDU_LONG = "ان لوگوں کے رستے جن پر تو اپنا فضل وکرم کرتا رہا نہ ان کے جن پر غصے ہوتا رہا"
 
 
@@ -158,6 +159,35 @@ def test_wrap_preserves_every_word(arabic_font):
     handle = textsvc._load_font(str(arabic_font), 72)
     lines = textsvc.wrap_text(handle, AYAH_SEVEN, max_width=500)
     assert " ".join(lines).split() == AYAH_SEVEN.split()
+
+
+def test_wrap_does_not_leave_one_word_alone_on_the_last_line(arabic_font):
+    """The break that greedy wrapping makes is not the one that reads best.
+
+    Filling each line to the brim leaves the remainder stranded: An-Nas 5 came
+    out as four words and then a single word on a line of its own. The lines
+    are evened out instead, without using any more of them.
+    """
+    handle = textsvc._load_font(str(arabic_font), 72)
+    # Wide enough for four of the five words, which is what strands the fifth.
+    width = textsvc.measure(handle, " ".join(AN_NAS_FIVE.split()[:4])) + 10
+
+    lines = textsvc.wrap_text(handle, AN_NAS_FIVE, max_width=width)
+
+    assert len(lines) == 2
+    assert len(lines[-1].split()) > 1
+    # ... and the words are all still there, in order.
+    assert " ".join(lines).split() == AN_NAS_FIVE.split()
+
+
+def test_wrap_uses_no_more_lines_than_it_has_to(arabic_font):
+    """Evening the lines out must not cost an extra one."""
+    handle = textsvc._load_font(str(arabic_font), 72)
+    for width in (400, 600, 900, 1400):
+        greedy = textsvc._greedy_lines(
+            handle, AYAH_SEVEN.split(), width, True, 0.0
+        )
+        assert len(textsvc.wrap_text(handle, AYAH_SEVEN, max_width=width)) == len(greedy)
 
 
 def test_wrap_never_loses_a_word_even_when_too_narrow(arabic_font):

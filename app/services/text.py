@@ -559,6 +559,103 @@ def _rasterise(
 # Line breaking and automatic sizing
 # ---------------------------------------------------------------------------
 
+def _greedy_lines(
+    handle: FontHandle,
+    words: Sequence[str],
+    max_width: float,
+    base_rtl: bool,
+    tracking: float,
+) -> list[list[str]]:
+    """Fill each line as far as it will go. This gives the FEWEST lines."""
+    lines: list[list[str]] = []
+    current: list[str] = []
+    for word in words:
+        candidate = " ".join(current + [word])
+        if current and measure(handle, candidate, base_rtl, tracking) > max_width:
+            lines.append(current)
+            current = [word]
+        else:
+            current.append(word)
+    if current:
+        lines.append(current)
+    return lines
+
+
+def _balanced_lines(
+    handle: FontHandle,
+    words: Sequence[str],
+    max_width: float,
+    line_count: int,
+    base_rtl: bool,
+    tracking: float,
+) -> Optional[list[list[str]]]:
+    """Break *words* into exactly *line_count* lines, as evenly as they allow.
+
+    The cost of a line is the square of the space left at its end, so one very
+    short line is worse than two slightly short ones - which is exactly the
+    orphan this exists to avoid. Minimised over every way of breaking the words,
+    by the usual dynamic program.
+
+    Line widths are estimated by adding up the words and the spaces between
+    them, measured once each: Arabic letters do not join across a space, so a
+    line is as wide as its parts. The estimate is only used to CHOOSE the
+    breaks; the caller measures the lines it gets for real.
+
+    Returns None when the words cannot be broken into that many lines without
+    one of them overflowing, in which case the greedy answer stands.
+    """
+    count = len(words)
+    if line_count <= 1 or line_count > count:
+        return None
+
+    widths = [measure(handle, word, base_rtl, tracking) for word in words]
+    space = measure(handle, "\u0627 \u0627", base_rtl, tracking) - 2 * measure(
+        handle, "\u0627", base_rtl, tracking
+    )
+    space = max(0.0, space)
+
+    def run_width(start: int, end: int) -> float:
+        """Width of words[start:end] set on one line."""
+        return sum(widths[start:end]) + space * (end - start - 1)
+
+    infinity = float("inf")
+    # best[i][k] = cost of setting words[i:] in k lines.
+    best = [[infinity] * (line_count + 1) for _ in range(count + 1)]
+    cut = [[0] * (line_count + 1) for _ in range(count + 1)]
+    best[count][0] = 0.0
+
+    for remaining in range(1, line_count + 1):
+        for start in range(count - 1, -1, -1):
+            for end in range(start + 1, count + 1):
+                width = run_width(start, end)
+                if width > max_width:
+                    break
+                rest = best[end][remaining - 1]
+                if rest == infinity:
+                    continue
+                # Every line is penalised for the space it leaves, the last one
+                # included. In running text the last line of a paragraph is let
+                # off, because it is expected to end early; here the block is
+                # centred display text, and a final line holding one word is
+                # exactly what this is meant to avoid.
+                slack = max_width - width
+                cost = rest + slack * slack
+                if cost < best[start][remaining]:
+                    best[start][remaining] = cost
+                    cut[start][remaining] = end
+
+    if best[0][line_count] == infinity:
+        return None
+
+    lines: list[list[str]] = []
+    start, remaining = 0, line_count
+    while remaining > 0:
+        end = cut[start][remaining]
+        lines.append(list(words[start:end]))
+        start, remaining = end, remaining - 1
+    return lines
+
+
 def wrap_text(
     handle: FontHandle,
     text: str,
@@ -566,23 +663,29 @@ def wrap_text(
     base_rtl: bool = True,
     tracking: float = 0.0,
 ) -> list[str]:
-    """Greedy word wrap using real shaped widths."""
+    """Word wrap using real shaped widths, with the lines evened out.
+
+    Greedy wrapping fills each line to the brim and leaves the remainder alone
+    on the last one. The line COUNT it finds is the fewest possible, so that is
+    kept; the words are then redistributed across that many lines so no line is
+    left nearly empty while the one above it is full.
+    """
     words = [w for w in text.split() if w]
     if not words:
         return [""]
 
-    lines: list[str] = []
-    current: list[str] = []
-    for word in words:
-        candidate = " ".join(current + [word])
-        if current and measure(handle, candidate, base_rtl, tracking) > max_width:
-            lines.append(" ".join(current))
-            current = [word]
-        else:
-            current.append(word)
-    if current:
-        lines.append(" ".join(current))
-    return lines
+    lines = _greedy_lines(handle, words, max_width, base_rtl, tracking)
+    if len(lines) > 1:
+        balanced = _balanced_lines(
+            handle, words, max_width, len(lines), base_rtl, tracking
+        )
+        if balanced is not None and all(
+            measure(handle, " ".join(line), base_rtl, tracking) <= max_width
+            for line in balanced
+        ):
+            lines = balanced
+
+    return [" ".join(line) for line in lines]
 
 
 @dataclass
