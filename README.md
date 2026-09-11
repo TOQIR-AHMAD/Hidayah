@@ -59,6 +59,9 @@ Words light up according to published per-word recitation timings instead of est
 **🕌 Quranic Typography**
 Arabic is shaped with HarfBuzz and rendered with Quran-compatible fonts to preserve joining, ligatures, and diacritics.
 
+**📖 One Ayah, One Screen**
+An ayah is shown whole wherever it fits. The few that are too long - 2:282 is 128 words - are split across screens at a word boundary instead of being shrunk unread: each screen is held for exactly the span in which its own words are recited, and the reciter carries straight on through the turn.
+
 **🎨 Cinematic Design**
 Supports multiple visual styles, animated backgrounds, custom artwork, and channel branding.
 

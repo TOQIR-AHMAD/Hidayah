@@ -354,6 +354,11 @@ theme:
   # scales identically at 1080p and at 360p preview.
   size_arabic_max: 0.150     # upper bound for the auto-fitter
   size_arabic_min: 0.050     # lower bound
+  # An ayah longer than one screen is split across screens rather than shrunk
+  # below this size: the words that fit are shown while they are recited, then
+  # the card turns and the reciter carries straight on. 0 switches it off and
+  # squeezes every ayah onto one card, however small that has to be.
+  size_arabic_page_min: 0.075
   size_urdu_max: 0.088
   size_urdu_min: 0.030
   size_surah_label: 0.034

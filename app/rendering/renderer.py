@@ -37,6 +37,7 @@ from app.models.surah import Surah
 from app.rendering import animations as anim
 from app.rendering import textures
 from app.rendering.compositions import CardBuilder
+from app.rendering.pagination import AyahPage
 from app.rendering.timeline import (
     CardWindow,
     Segment,
@@ -358,6 +359,7 @@ class Renderer:
         builder: CardBuilder,
         words: list[WordWindow],
         cards_dir: Path,
+        pages: Optional[dict[int, "AyahPage"]] = None,
     ) -> dict[tuple[int, int], "HighlightAsset"]:
         """One small PNG per word, cropped to its ink.
 
@@ -365,22 +367,31 @@ class Renderer:
         there are one of them for every word in the surah. The crop plus its
         offset is a few hundred kilobytes and composites to the same pixels.
         """
+        # Keyed by SEGMENT, not by ayah: the same word of a paged ayah is laid
+        # out differently on each page it could appear on, and a shared key
+        # would put the second page's highlight over the first page's glyphs.
         assets: dict[tuple[int, int], HighlightAsset] = {}
-        wanted = sorted({(w.ayah_number, w.word_index) for w in words})
+        wanted = sorted({(w.segment_index, w.ayah_number, w.word_index) for w in words})
         if not wanted:
             return assets
 
+        pages = pages or {}
         highlights_dir = ensure_dir(cards_dir / "words")
-        for ayah_number, word_index in wanted:
-            layer = builder.highlight_layer(self.surah.ayah(ayah_number), word_index)
+        for segment_index, ayah_number, word_index in wanted:
+            page = pages.get(segment_index)
+            layer = builder.highlight_layer(
+                self.surah.ayah(ayah_number), word_index, page
+            )
             if layer is None:
                 continue
             box = layer.getbbox()
             if box is None:
                 continue
-            destination = highlights_dir / f"a{ayah_number:03d}_w{word_index:02d}.png"
+            destination = (
+                highlights_dir / f"s{segment_index:04d}_w{word_index:03d}.png"
+            )
             textures.save_png(layer.crop(box), destination)
-            assets[(ayah_number, word_index)] = HighlightAsset(
+            assets[(segment_index, word_index)] = HighlightAsset(
                 path=destination, x=box[0], y=box[1]
             )
 
@@ -419,8 +430,19 @@ class Renderer:
                 self.log.info("Rendering the outro card")
                 image = builder.outro_card()
             elif segment.kind == "arabic":
-                self.log.info("Rendering Ayah %d/%d - Arabic", segment.ayah_number, ayah_total)
-                image = builder.arabic_card(self.surah.ayah(segment.ayah_number))
+                page = segment.page
+                if page is not None and not page.is_only_page:
+                    self.log.info(
+                        "Rendering Ayah %d/%d - Arabic, screen %d of %d",
+                        segment.ayah_number, ayah_total, page.index + 1, page.count,
+                    )
+                else:
+                    self.log.info(
+                        "Rendering Ayah %d/%d - Arabic", segment.ayah_number, ayah_total
+                    )
+                image = builder.arabic_card(
+                    self.surah.ayah(segment.ayah_number), segment.page
+                )
             else:
                 self.log.info(
                     "Rendering Ayah %d/%d - Urdu translation", segment.ayah_number, ayah_total
@@ -430,7 +452,12 @@ class Renderer:
             textures.save_png(image, destination)
             paths[segment.card_id] = destination
 
-        highlights = self._build_highlights(builder, words, cards_dir)
+        pages = {
+            segment.index: segment.page
+            for segment in self.timeline.segments
+            if segment.page is not None
+        }
+        highlights = self._build_highlights(builder, words, cards_dir, pages)
         return paths, highlights
 
     # -- filter graph --------------------------------------------------------
@@ -602,7 +629,7 @@ class Renderer:
             fade = max(0.0, theme.highlight_fade) / speed
 
             for position, word in enumerate(words):
-                asset = highlights.get((word.ayah_number, word.word_index))
+                asset = highlights.get((word.segment_index, word.word_index))
                 if asset is None:
                     continue
                 index = job.add_input(asset.path)

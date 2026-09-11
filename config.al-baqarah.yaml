@@ -371,6 +371,11 @@ theme:
   # other ayah is pushed below 54px, because the fitter only ever takes the
   # LARGEST size that fits.
   size_arabic_min: 0.030     # lower bound
+  # An ayah longer than one screen is split across screens rather than shrunk
+  # below this size: the words that fit are shown while they are recited, then
+  # the card turns and the reciter carries straight on. 0 switches it off and
+  # squeezes every ayah onto one card, however small that has to be.
+  size_arabic_page_min: 0.075
   size_urdu_max: 0.088
   size_urdu_min: 0.030
   size_surah_label: 0.034

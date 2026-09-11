@@ -383,6 +383,11 @@ class ThemeSettings(BaseModel):
 
     size_arabic_max: float = 0.150
     size_arabic_min: float = 0.050
+    # Below this, an ayah is split across two or more screens instead of
+    # being shrunk any further: the words that fit are shown while they are
+    # recited, then the card turns and the reciter carries on. 0 switches
+    # paging off, and every ayah is squeezed onto one card as before.
+    size_arabic_page_min: float = 0.0
     size_urdu_max: float = 0.088
     size_urdu_min: float = 0.030
     size_surah_label: float = 0.034

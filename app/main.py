@@ -17,7 +17,7 @@ import argparse
 import sys
 import urllib.error
 import urllib.request
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
@@ -33,6 +33,7 @@ from app.services import audio as audiosvc
 from app.services import subtitles as subsvc
 from app.services import text as textsvc
 from app.services import thumbnail as thumbsvc
+from app.services import word_timings as word_timings_service
 from app.utils import ffmpeg as ff
 from app.utils.files import clean_dir, find_first_media, free_space_mb, relative_to_root
 from app.utils.fonts import FontResolver, describe_bundled, download_fonts
@@ -313,7 +314,6 @@ class Validator:
         drifts against the voice, and that is invisible until you watch it, so
         it is worth naming here.
         """
-        from app.services import word_timings as word_timings_service
 
         if not self.config.content.word_highlight:
             self._add("Word highlight", True, "off (content.word_highlight)")
@@ -374,6 +374,9 @@ class Prepared:
     surah: Surah
     plan: audiosvc.AudioPlan
     timeline: Timeline
+    # Per-word recitation timings, loaded once here because the pagination
+    # needs them too - they are where a split ayah's audio is cut.
+    word_timings: dict = field(default_factory=dict)
 
 
 def _silent_plan(config: Config, surah: Surah) -> audiosvc.AudioPlan:
@@ -434,11 +437,41 @@ def prepare(config: Config, max_ayahs: int = 0, no_audio: bool = False) -> Prepa
             plan.total_audio_seconds,
         )
 
-    timeline = build_timeline(config, surah, plan, max_ayahs=max_ayahs)
+    timings = word_timings_service.load(
+        config, surah, {n: clip.duration for n, clip in plan.recitation.items()}
+    )
+    pages = _paginate(config, surah)
+    timeline = build_timeline(
+        config, surah, plan, max_ayahs=max_ayahs, pages=pages, timings=timings
+    )
+    split = sum(1 for group in pages.values() if len(group) > 1)
+    if split:
+        log.info(
+            "%d ayah(s) are too long for one screen and are shown over several",
+            split,
+        )
     log.info(
         "Timeline: %d segments, %.1fs total", len(timeline), timeline.total_duration
     )
-    return Prepared(config=config, surah=surah, plan=plan, timeline=timeline)
+    return Prepared(
+        config=config, surah=surah, plan=plan, timeline=timeline, word_timings=timings
+    )
+
+
+def _paginate(config: Config, surah: Surah) -> dict[int, list]:
+    """Which ayahs need more than one screen, and where they divide.
+
+    Measured at the FINAL resolution whatever is being rendered: every size in
+    the theme is a fraction of the frame height, so the split a preview would
+    find is the same one, and pinning it here keeps a preview honest about what
+    the final render will do.
+    """
+    if config.theme.size_arabic_page_min <= 0:
+        return {}
+    from app.rendering.compositions import CardBuilder
+
+    builder = CardBuilder(config, surah, config.video.width, config.video.height)
+    return {ayah.number: builder.paginate(ayah) for ayah in surah.ayahs}
 
 
 def _require_valid(config: Config, no_audio: bool) -> None:
@@ -537,7 +570,10 @@ def _render(config: Config, args: argparse.Namespace, preview: bool) -> int:
         preview=preview, output=output, subtitle_file=burned,
     )
 
-    renderer = Renderer(config, prepared.surah, prepared.plan, prepared.timeline)
+    renderer = Renderer(
+        config, prepared.surah, prepared.plan, prepared.timeline,
+        word_timings=prepared.word_timings,
+    )
     report = renderer.render(request)
 
     written: list[Path] = [report.path]

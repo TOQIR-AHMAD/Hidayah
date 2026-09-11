@@ -18,9 +18,10 @@ from typing import Optional
 from PIL import Image, ImageChops
 
 from app.config import Config
-from app.models.ayah import Ayah
+from app.models.ayah import Ayah, recited_words
 from app.models.surah import Surah
 from app.rendering import textures
+from app.rendering.pagination import AyahPage, single_page, split_pages
 from app.services import text as textsvc
 from app.utils.fonts import FontResolver
 from app.utils.logging import get_logger
@@ -120,7 +121,8 @@ class CardBuilder:
         self.content_width = int((width - 2 * self.margin_x) * self.theme.text_width_ratio)
         self.content_height = height - 2 * self.margin_y
 
-        self._arabic_layouts: dict[int, ArabicLayout] = {}
+        self._arabic_layouts: dict[tuple[int, int], ArabicLayout] = {}
+        self._pages: dict[int, list[AyahPage]] = {}
 
     # -- helpers -------------------------------------------------------------
     def _px(self, fraction: float) -> int:
@@ -546,39 +548,115 @@ class CardBuilder:
         top = self._paste_centered(canvas, label, top + self._px(0.020), theme.text_secondary_color, 0.85)
         return top + self._px(0.040)
 
-    def _arabic_layout(self, ayah: Ayah) -> "ArabicLayout":
-        """Where this ayah's text sits on its card, and where each word sits.
+    def _body_top(self, ayah: Ayah) -> int:
+        """Where the ayah's text may start, just under the header.
+
+        The header is measured on a scratch canvas: only its height matters,
+        and drawing it twice would double its glow.
+        """
+        return self._header(
+            self._blank(), ayah, f"{LABEL_AYAH_URDU} {urdu_number(ayah.number)}"
+        )
+
+    def _divider_height(self) -> int:
+        """Room kept below the text for whatever closes the card.
+
+        In the iOS style nothing is drawn under the text, so the space the
+        classic divider would have taken is given back to the ayah. The glass
+        style closes with a rosette, which needs its own room.
+        """
+        if self.is_ios:
+            return 0
+        if self.is_glass:
+            return self._px(self.theme.ornament_size)
+        return max(4, self._px(0.014))
+
+    def _body_height(self, ayah: Ayah) -> int:
+        """How tall the text may be on this ayah's card."""
+        bottom_limit = (
+            self.height - self.margin_y - self._divider_height() - self._px(0.030)
+        )
+        return max(self._px(0.12), bottom_limit - self._body_top(ayah))
+
+    # -- pagination ----------------------------------------------------------
+    def paginate(self, ayah: Ayah) -> list[AyahPage]:
+        """How many screens this ayah needs, and which words go on each.
+
+        One screen unless the ayah cannot be laid out at
+        `theme.size_arabic_page_min`, which is the smallest size still worth
+        reading. Measured with the real font against the real card, so the
+        answer matches what the renderer will actually draw.
+        """
+        cached = self._pages.get(ayah.number)
+        if cached is not None:
+            return cached
+
+        floor = self._px(self.theme.size_arabic_page_min)
+        words = recited_words(ayah.arabic)
+        if floor <= 0 or len(words) < 2:
+            pages = [single_page(ayah.number, ayah.arabic, ayah.word_count)]
+        else:
+            available = self._body_height(ayah)
+
+            def fits(text: str) -> bool:
+                fitted = textsvc.fit_text(
+                    self.fonts.arabic,
+                    text,
+                    self.content_width,
+                    available,
+                    self._px(self.theme.size_arabic_max),
+                    floor,
+                    self.theme.line_spacing_arabic,
+                    max_lines=self.theme.max_lines_arabic,
+                )
+                # The line budget counts too. fit_text enforces it while it is
+                # searching, but falls back to whatever fits the box once it
+                # reaches the floor - so without this a page could "fit" by
+                # wrapping to more lines than the theme allows.
+                return (
+                    fitted.font_size >= floor
+                    and len(fitted.lines) <= self.theme.max_lines_arabic
+                    and fitted.rendered.height <= available
+                    and fitted.rendered.width <= self.content_width
+                )
+
+            pages = split_pages(ayah.number, words, fits)
+            if len(pages) > 1:
+                self.log.info(
+                    "Ayah %d does not fit one screen at %dpx; splitting it over "
+                    "%d screens", ayah.number, floor, len(pages),
+                )
+
+        self._pages[ayah.number] = pages
+        return pages
+
+    def _arabic_layout(
+        self, ayah: Ayah, page: Optional[AyahPage] = None
+    ) -> "ArabicLayout":
+        """Where this page's text sits on its card, and where each word sits.
 
         Worked out once and cached, because `arabic_card` and every
-        `highlight_layer` for the same ayah must agree on the position to the
+        `highlight_layer` for the same page must agree on the position to the
         pixel - the highlight is drawn over the card's own glyphs.
+
+        *page* is a stretch of the ayah; without one the whole ayah is laid out,
+        which is what an ayah that fits on a single screen gets.
         """
-        cached = self._arabic_layouts.get(ayah.number)
+        if page is None:
+            page = single_page(ayah.number, ayah.arabic, ayah.word_count)
+        key = (ayah.number, page.index)
+        cached = self._arabic_layouts.get(key)
         if cached is not None:
             return cached
 
         theme = self.theme
-        # The header is measured on a scratch canvas: only its height matters
-        # here, and drawing it twice would double its glow.
-        body_top = self._header(
-            self._blank(), ayah, f"{LABEL_AYAH_URDU} {urdu_number(ayah.number)}"
-        )
-
-        # In the iOS style nothing is drawn under the text, so the space the
-        # classic divider would have taken is given back to the ayah. The glass
-        # style closes with a rosette, which needs its own room.
-        if self.is_ios:
-            divider_h = 0
-        elif self.is_glass:
-            divider_h = self._px(theme.ornament_size)
-        else:
-            divider_h = max(4, self._px(0.014))
-        bottom_limit = self.height - self.margin_y - divider_h - self._px(0.030)
-        available = max(self._px(0.12), bottom_limit - body_top)
+        body_top = self._body_top(ayah)
+        divider_h = self._divider_height()
+        available = self._body_height(ayah)
 
         fitted = textsvc.fit_text(
             self.fonts.arabic,
-            ayah.arabic,
+            page.text,
             self.content_width,
             available,
             self._px(theme.size_arabic_max),
@@ -587,8 +665,8 @@ class CardBuilder:
             max_lines=theme.max_lines_arabic,
         )
         self.log.debug(
-            "Ayah %d Arabic fitted at %dpx over %d line(s)",
-            ayah.number, fitted.font_size, len(fitted.lines),
+            "%s fitted at %dpx over %d line(s)",
+            page.label().capitalize(), fitted.font_size, len(fitted.lines),
         )
 
         # Re-rasterise the identical lines to get the per-word masks. Same
@@ -612,13 +690,13 @@ class CardBuilder:
             available=available,
             divider_h=divider_h,
         )
-        self._arabic_layouts[ayah.number] = layout
+        self._arabic_layouts[key] = layout
         return layout
 
-    def arabic_card(self, ayah: Ayah) -> Image.Image:
+    def arabic_card(self, ayah: Ayah, page: Optional[AyahPage] = None) -> Image.Image:
         canvas = self._blank()
         theme = self.theme
-        layout = self._arabic_layout(ayah)
+        layout = self._arabic_layout(ayah, page)
 
         # The panel goes down before anything else, so the text and the badge
         # both sit on top of it.
@@ -705,15 +783,25 @@ class CardBuilder:
         layer.putalpha(patch)
         _composite(canvas, layer, left, top)
 
-    def highlight_layer(self, ayah: Ayah, word_index: int) -> Optional[Image.Image]:
+    def highlight_layer(
+        self, ayah: Ayah, word_index: int, page: Optional[AyahPage] = None
+    ) -> Optional[Image.Image]:
         """A full-frame layer lighting one word of *ayah*, or None if there
         is no such word.
 
         This is a separate layer rather than a second copy of the card so that
         the card keeps its own fade schedule: the highlight simply switches on
         and off over the top of it while the card is at full opacity.
+
+        *word_index* counts from the start of the AYAH. On a paged ayah the card
+        holds only some of those words, so it is converted to the page's own
+        numbering here - the layout knows nothing of the words before it.
         """
-        layout = self._arabic_layout(ayah)
+        layout = self._arabic_layout(ayah, page)
+        if page is not None:
+            if not page.contains(word_index):
+                return None
+            word_index = page.local_index(word_index)
         word = layout.word(word_index)
         if word is None:
             return None

@@ -1,5 +1,5 @@
 # ============================================================================
-#  Quran Video Generator - Surah Al-Fatihah
+#  Quran Video Generator - Surah Al-Falaq
 #  Theme: "Midnight Mihrab" (original design, not copied from any channel)
 #
 #  Every value below is editable. Run `python run.py validate` after changing
@@ -7,20 +7,24 @@
 # ============================================================================
 
 project:
-  name: "Surah Al-Fatihah"
+  name: "Surah Al-Falaq"
   # Base name used for output/<slug>.mp4, .jpg, .srt
-  slug: "001_Al-Fatihah"
+  slug: "113_Al-Falaq"
+  # Which surah this config renders. fetch-text and fetch-audio read it.
+  surah: 113
 
 # ----------------------------------------------------------------------------
 # Paths (relative to the project root)
 # ----------------------------------------------------------------------------
 paths:
-  data_file: "data/al_fatihah.json"
+  data_file: "data/al_falaq.json"
   fonts_dir: "assets/fonts"
   backgrounds_dir: "assets/backgrounds"
   branding_dir: "assets/branding"
-  recitation_dir: "assets/audio/recitation"
-  urdu_dir: "assets/audio/urdu"
+  # One directory per surah: the files inside are numbered 001..006 by their
+  # place in THIS surah, so two surahs cannot share a directory.
+  recitation_dir: "assets/audio/recitation/113"
+  urdu_dir: "assets/audio/urdu/113"
   output_dir: "output"
   temp_dir: "temp"
   logs_dir: "logs"
@@ -72,7 +76,7 @@ audio:
   # "auto"        -> prefer per-ayah files, fall back to the full-surah file
   recitation_mode: "auto"
 
-  full_surah_file: "al_fatihah.mp3"
+  full_surah_file: "al_falaq.mp3"
 
   # Only used when recitation_mode resolves to "full_surah".
   # Start/end time of each ayah inside the single recording, in seconds.
@@ -173,11 +177,11 @@ content:
 #   python run.py fetch-word-timings
 #
 # writes data/word_timings.json. Every ayah in it is checked against the text
-# in data/al_fatihah.json and against the real length of its audio file before
+# in data/al_falaq.json and against the real length of its audio file before
 # it is used; anything that does not match is estimated from letter counts
 # instead, and `validate` says which ayahs those are.
 word_timings:
-  file: "data/word_timings.json"
+  file: "data/word_timings_113.json"
 
   # 7 is Mishary Rashid Alafasy - the reciter the shipped audio_sources
   # template points at, so the timings and the recording are the same
@@ -222,15 +226,14 @@ audio_sources:
   enabled: true
   # {ayah} and {ayah:03d} are substituted.
   #
-  # Note: this CDN indexes by the GLOBAL ayah number (1-6236). Surah Al-Fatihah
-  # occupies global 1-7, so for this project the global and local numbers are the
-  # same. That equivalence would NOT hold for any other surah.
+  # This CDN indexes by the GLOBAL ayah number (1-6236), so the template uses
+  # {global_ayah}. Al-Falaq is global 6226-6230, saved as 001-005.
   #
   # To use a different reciter, swap the edition id. Verified working ids:
   #   ar.alafasy  ar.husary  ar.minshawi  ar.mahermuaiqly
   # Browse them all at: https://api.alquran.cloud/v1/edition?format=audio
-  recitation_url_template: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/{ayah}.mp3"
-  urdu_url_template: "https://cdn.islamic.network/quran/audio/64/ur.khan/{ayah}.mp3"
+  recitation_url_template: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/{global_ayah}.mp3"
+  urdu_url_template: ""
 
 # ----------------------------------------------------------------------------
 # Fonts. Put font files in assets/fonts/.
@@ -584,9 +587,9 @@ thumbnail:
   width: 1280
   height: 720
   quality: 94
-  arabic_text: "الفاتحة"
-  urdu_text: "سورۃ الفاتحہ"
-  latin_text: "Surah Al-Fatihah"
+  arabic_text: "الفلق"
+  urdu_text: "سورۃ الفلق"
+  latin_text: "Surah Al-Falaq"
   # Keep this honest: the video shows no Urdu, so it must not promise any.
   subtitle_text: ""
   size_arabic: 0.28

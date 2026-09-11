@@ -14,11 +14,12 @@ The sequence is strictly one ayah at a time:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Iterator, Literal, Optional
 
 from app.config import Config
 from app.models.surah import Surah
+from app.rendering.pagination import AyahPage
 from app.services.audio import AudioClip, AudioPlan
 from app.utils.logging import get_logger
 
@@ -40,6 +41,12 @@ class Segment:
     audio_speed: float = 1.0
     subtitle_text: str = ""
     subtitle_language: str = ""
+    # Set only on an ayah too long for one screen. The page says which of the
+    # ayah's words this card carries; the offset says how far into the ayah's
+    # recording its clip was cut, which is what the word timings are measured
+    # against.
+    page: Optional[AyahPage] = None
+    audio_source_offset: float = 0.0
 
     @property
     def end(self) -> float:
@@ -60,7 +67,16 @@ class Segment:
     def label(self) -> str:
         if self.ayah_number is None:
             return self.kind.capitalize()
+        if self.page is not None and not self.page.is_only_page:
+            return (
+                f"Ayah {self.ayah_number} {self.kind} "
+                f"{self.page.index + 1}/{self.page.count}"
+            )
         return f"Ayah {self.ayah_number} {self.kind}"
+
+    def holds_word(self, word_index: int) -> bool:
+        """Whether this card shows the ayah's *word_index*-th recited word."""
+        return self.page is None or self.page.contains(word_index)
 
 
 @dataclass
@@ -106,13 +122,123 @@ def _timecode(seconds: float) -> str:
     return f"{int(minutes):02d}:{secs:05.2f}"
 
 
+def _page_cuts(
+    pages: list[AyahPage], timing, clip_duration: float
+) -> list[tuple[float, float]]:
+    """Where each page's audio begins and ends inside the ayah's recording.
+
+    The cuts are taken at the START of each page's first word, and one page ends
+    exactly where the next begins, so the pages tile the whole recording: no
+    syllable is played twice and none is dropped. The first page keeps whatever
+    lead-in the file has, and the last runs to the end of it - the reciter's
+    final word is often held far past where its timing says it ends.
+    """
+    starts = [0.0]
+    for page in pages[1:]:
+        spans = timing.words if timing is not None else []
+        if page.first_word < len(spans):
+            starts.append(max(starts[-1], spans[page.first_word].start))
+        else:
+            # No timing for that word: share what is left evenly rather than
+            # dropping the page. `validate` already reports estimated ayahs.
+            share = clip_duration * page.index / max(1, len(pages))
+            starts.append(max(starts[-1], share))
+
+    bounds = []
+    for position, start in enumerate(starts):
+        end = starts[position + 1] if position + 1 < len(starts) else clip_duration
+        bounds.append((start, max(start, end)))
+    return bounds
+
+
+def _arabic_segments(
+    ayah,
+    recitation: AudioClip,
+    pages: Optional[list[AyahPage]],
+    timing,
+    pad_before: float,
+    pad_after: float,
+    min_arabic: float,
+    trailing_gap: float,
+    speed: float,
+) -> list[Segment]:
+    """One segment for an ayah that fits; one per page for an ayah that does not.
+
+    The recitation is never paused at a page turn: only the first page carries
+    the lead-in silence and only the last carries the trailing silence, so the
+    words run straight on while the card changes underneath them.
+    """
+    if not pages or len(pages) == 1:
+        page = pages[0] if pages else None
+        duration = max(
+            min_arabic, pad_before + recitation.played_duration(speed) + pad_after
+        ) + trailing_gap
+        return [
+            Segment(
+                index=0,
+                kind="arabic",
+                start=0.0,
+                duration=duration,
+                card_id=f"ayah_{ayah.number:03d}_arabic",
+                ayah_number=ayah.number,
+                audio=recitation,
+                audio_offset=pad_before,
+                audio_speed=speed,
+                subtitle_text=ayah.arabic,
+                subtitle_language="ar",
+                page=page,
+            )
+        ]
+
+    segments: list[Segment] = []
+    for page, (start, end) in zip(pages, _page_cuts(pages, timing, recitation.duration)):
+        first, last = page.index == 0, page.index == len(pages) - 1
+        clip = replace(
+            recitation,
+            duration=max(0.01, end - start),
+            trim_start=recitation.trim_start + start,
+            label=f"{recitation.label} ({page.index + 1}/{page.count})",
+        )
+        lead = pad_before if first else 0.0
+        tail = pad_after if last else 0.0
+        duration = lead + clip.played_duration(speed) + tail
+        if last:
+            duration = max(min_arabic, duration) + trailing_gap
+        segments.append(
+            Segment(
+                index=0,
+                kind="arabic",
+                start=0.0,
+                duration=duration,
+                card_id=f"ayah_{ayah.number:03d}_p{page.index + 1}_arabic",
+                ayah_number=ayah.number,
+                audio=clip,
+                audio_offset=lead,
+                audio_speed=speed,
+                subtitle_text=page.text,
+                subtitle_language="ar",
+                page=page,
+                audio_source_offset=start,
+            )
+        )
+    return segments
+
+
 def build_timeline(
     config: Config,
     surah: Surah,
     plan: AudioPlan,
     max_ayahs: int = 0,
+    pages: Optional[dict[int, list[AyahPage]]] = None,
+    timings: Optional[dict] = None,
 ) -> Timeline:
-    """Lay every segment end to end, following the audio durations."""
+    """Lay every segment end to end, following the audio durations.
+
+    *pages* splits an ayah that will not fit one screen; *timings* says when
+    each of its words is recited, which is where the splits are cut. Without
+    either, every ayah is one card carrying its whole recitation - which is
+    what every ayah short enough to fit gets anyway.
+    """
     animation = config.animation
     audio_cfg = config.audio
 
@@ -159,30 +285,26 @@ def build_timeline(
         is_last = position == len(ayahs) - 1
         show_urdu = config.content.urdu_translation
 
-        arabic_duration = max(
-            min_arabic, pad_before + recitation.played_duration(speed) + pad_after
-        )
         # With no Urdu card to follow it, the breath between ayahs has to sit at
         # the end of the Arabic section instead.
-        if not show_urdu and not is_last:
-            arabic_duration += gap
-        timeline.segments.append(
-            Segment(
-                index=index,
-                kind="arabic",
-                start=cursor,
-                duration=arabic_duration,
-                card_id=f"ayah_{ayah.number:03d}_arabic",
-                ayah_number=ayah.number,
-                audio=recitation,
-                audio_offset=pad_before,
-                audio_speed=speed,
-                subtitle_text=ayah.arabic,
-                subtitle_language="ar",
-            )
-        )
-        cursor += arabic_duration
-        index += 1
+        trailing_gap = gap if (not show_urdu and not is_last) else 0.0
+
+        for segment in _arabic_segments(
+            ayah=ayah,
+            recitation=recitation,
+            pages=(pages or {}).get(ayah.number),
+            timing=(timings or {}).get(ayah.number),
+            pad_before=pad_before,
+            pad_after=pad_after,
+            min_arabic=min_arabic,
+            trailing_gap=trailing_gap,
+            speed=speed,
+        ):
+            segment.index = index
+            segment.start = cursor
+            timeline.segments.append(segment)
+            cursor += segment.duration
+            index += 1
 
         if not show_urdu:
             continue
@@ -322,16 +444,27 @@ def word_windows(
         else:
             first_moment, last_moment = segment.start, segment.end
 
-        origin = segment.audio_start
+        # A paged ayah's clip begins part-way into the recording, but its word
+        # timings are still measured from the start of the file, so the cut has
+        # to come off every one of them.
+        origin = segment.audio_start - segment.audio_source_offset / speed
         spans = entry.words
         for position, span in enumerate(spans):
+            if not segment.holds_word(span.index):
+                continue
             start = origin + span.start / speed
             end = origin + span.end / speed
 
-            # Hold into the gap before the next word rather than going dark.
+            # Hold into the gap before the next word rather than going dark -
+            # but only as far as this card's own last word, or the colour would
+            # run on into a page that is no longer on screen.
+            on_this_card = (
+                position + 1 < len(spans)
+                and segment.holds_word(spans[position + 1].index)
+            )
             next_start = (
                 origin + spans[position + 1].start / speed
-                if position + 1 < len(spans)
+                if on_this_card
                 else segment.audio_end
             )
             gap = max(0.0, next_start - end)
