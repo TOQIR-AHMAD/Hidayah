@@ -1,0 +1,72 @@
+{
+  "surah_number": 114,
+  "name_arabic": "النَّاس",
+  "name_english": "An-Naas",
+  "name_urdu": "النَّاس",
+  "ayah_count": 6,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ",
+      "urdu_translation": "آپ کہہ دیجئے! کہ میں لوگوں کے پروردگار کی پناه میں آتا ہوں",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Say, \"I seek refuge in the Lord of mankind,"
+    },
+    {
+      "number": 2,
+      "arabic": "مَلِكِ ٱلنَّاسِ",
+      "urdu_translation": "لوگوں کے مالک کی (اور)",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "The Sovereign of mankind."
+    },
+    {
+      "number": 3,
+      "arabic": "إِلَٰهِ ٱلنَّاسِ",
+      "urdu_translation": "لوگوں کے معبود کی (پناه میں)",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "The God of mankind,"
+    },
+    {
+      "number": 4,
+      "arabic": "مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ",
+      "urdu_translation": "وسوسہ ڈالنے والے پیچھے ہٹ جانے والے کے شر سے",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "From the evil of the retreating whisperer -"
+    },
+    {
+      "number": 5,
+      "arabic": "ٱلَّذِى يُوَسْوِسُ فِى صُدُورِ ٱلنَّاسِ",
+      "urdu_translation": "جو لوگوں کے سینوں میں وسوسہ ڈالتا ہے",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "Who whispers [evil] into the breasts of mankind -"
+    },
+    {
+      "number": 6,
+      "arabic": "مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ",
+      "urdu_translation": "(خواه) وه جن میں سے ہو یا انسان میں سے",
+      "recitation": "assets/audio/recitation/006.mp3",
+      "urdu_audio": "assets/audio/urdu/006.mp3",
+      "transliteration": null,
+      "english_translation": "From among the jinn and mankind.\""
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/114/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/114/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

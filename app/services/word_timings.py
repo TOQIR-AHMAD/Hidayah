@@ -9,7 +9,8 @@ Two things are checked before the file is accepted, because a highlight that
 drifts is worse than no highlight at all:
 
   * the number of timed words must equal the number of words in the ayah text
-    already verified in `data/al_fatihah.json`, and
+    already verified in the surah data file - counting the words the reciter
+    says, so the standalone waqf signs of the Uthmani text are not words, and
   * no word may end after the recitation file itself does.
 
 If the file is missing, or a particular ayah fails those checks, that ayah falls
@@ -31,6 +32,7 @@ from pathlib import Path
 from typing import Optional
 
 from app.config import Config
+from app.models.ayah import recited_words
 from app.models.surah import Surah
 from app.utils.logging import QVGError, get_logger
 
@@ -79,7 +81,7 @@ def estimate(ayah_number: int, text: str, duration: float) -> AyahTimings:
     final word of an ayah far beyond its letter count, so this will run ahead
     of the voice near the end of a line.
     """
-    words = text.split()
+    words = recited_words(text)
     weights = [_spoken_letters(w) for w in words]
     total = sum(weights) or 1
     spans: list[WordSpan] = []
@@ -170,7 +172,7 @@ def fetch(
     written: dict[str, dict] = {}
     for ayah in surah.ayahs:
         segments = by_ayah.get(str(ayah.number))
-        words = ayah.arabic.split()
+        words = recited_words(ayah.arabic)
         if segments is None:
             log.warning("No word timings published for ayah %d", ayah.number)
             continue
@@ -253,7 +255,7 @@ def load(
     result: dict[int, AyahTimings] = {}
 
     for ayah in surah.ayahs:
-        words = ayah.arabic.split()
+        words = recited_words(ayah.arabic)
         duration = durations.get(ayah.number, 0.0)
         spans = _accept(ayah.number, stored.get(str(ayah.number)), words, duration, log)
         if spans is None:

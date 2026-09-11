@@ -1,8 +1,10 @@
-# Quran Video Generator — Surah Al-Fatihah
+# Quran Video Generator
 
-A cinematic Quran video generator built specifically for **Surah Al-Fatihah**.
+A cinematic Quran video generator.
 
 It turns Quranic text, authentic recitation, and optional Urdu translation into a polished **YouTube-ready video**, with animated typography and word-by-word highlighting synchronized to the reciter.
+
+Two surahs are built and shipped: **Al-Fatihah** (`config.yaml`) and **Al-Baqarah** (`config.al-baqarah.yaml`).
 
 ## What it does
 
@@ -30,7 +32,7 @@ Arabic + Recitation
        ↓
 ...
        ↓
-Ayah 7
+Ayah N
 Arabic + Recitation
        ↓
 Fade Out
@@ -75,13 +77,29 @@ captions/
 
 The result is a clean Quran video designed for **YouTube and other video platforms**.
 
-## Current Scope
+## Rendering another Surah
 
-Currently supports:
+Each surah is one config file. To build one:
 
-> **Surah Al-Fatihah only**
+```bash
+python run.py --config config.al-baqarah.yaml fetch-text
+python run.py --config config.al-baqarah.yaml fetch-audio --accept-source-license
+python run.py --config config.al-baqarah.yaml fetch-word-timings
+python run.py --config config.al-baqarah.yaml validate
+python run.py --config config.al-baqarah.yaml render
+```
 
-The project is intentionally focused on producing a high-quality result for one Surah before expanding to additional Surahs.
+A new config needs four things changed: `project.surah`, `project.slug`,
+`paths.data_file` and `paths.recitation_dir` (one audio directory per surah,
+since the files inside are numbered by their place in that surah).
+
+**Long surahs.** Al-Fatihah is a single FFmpeg pass — 7 cards and 29 word
+highlights. Al-Baqarah is 286 cards and 6115 highlights, which as one graph
+would need some 6700 open inputs. Above the thresholds in the `render:` block
+the picture is built in chunks that each cut on a card boundary and are joined
+without re-encoding; the chunks are kept, so an interrupted render resumes
+where it stopped. A 98-minute render needs roughly **5 GB of free disk** while
+it runs, and several hours on a four-core machine.
 
 ---
 

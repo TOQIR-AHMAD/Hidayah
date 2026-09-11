@@ -17,3 +17,8 @@ logs/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Al-Baqarah's recitation is 286 files and 112 MB, and one command rebuilds it:
+#   python run.py --config config.al-baqarah.yaml fetch-audio --accept-source-license
+# The shorter surahs' audio is small enough to keep in the repo.
+assets/audio/recitation/002/

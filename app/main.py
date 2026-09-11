@@ -25,6 +25,7 @@ from rich.table import Table
 
 from app import __version__
 from app.config import Config, load_config
+from app.models import surah_index
 from app.models.surah import Surah, load_surah
 from app.rendering.renderer import RenderRequest, Renderer
 from app.rendering.timeline import Timeline, build_timeline
@@ -124,10 +125,18 @@ class Validator:
         self.surah = surah
         self._add("Quran data file", True, relative_to_root(path))
         self._add("Ayah count", True, f"{surah.ayah_count} ayahs")
+        numbers = [a.number for a in surah.ayahs]
+        in_order = numbers == list(range(1, surah.ayah_count + 1))
         self._add(
-            "Ayah numbering", True,
-            "1-7 in order" if [a.number for a in surah.ayahs] == list(range(1, 8)) else "unexpected",
+            "Ayah numbering", in_order,
+            f"1-{surah.ayah_count} in order" if in_order else "unexpected",
         )
+        if surah.surah_number != self.config.project.surah:
+            self._add(
+                "Surah", False,
+                f"config asks for surah {self.config.project.surah}, but "
+                f"{relative_to_root(path)} holds surah {surah.surah_number}",
+            )
         self._add(
             "Arabic text", all(a.arabic.strip() for a in surah.ayahs),
             f"edition: {surah.source.arabic_edition or 'not recorded'}",
@@ -596,10 +605,15 @@ def cmd_subtitles(config: Config, args: argparse.Namespace) -> int:
 
 
 def cmd_fetch_text(config: Config, args: argparse.Namespace) -> int:
-    from app.services.quran_source import fetch_al_fatihah
+    from app.services.quran_source import fetch_surah
 
-    banner("Fetching the Quran text", "verified published editions - never generated")
-    surah = fetch_al_fatihah(
+    number = args.surah or config.project.surah
+    banner(
+        f"Fetching the Quran text for surah {number}",
+        "verified published editions - never generated",
+    )
+    surah = fetch_surah(
+        number,
         config.data_file,
         arabic_edition=args.arabic_edition,
         urdu_edition=args.urdu_edition,
@@ -721,18 +735,28 @@ def cmd_fetch_audio(config: Config, args: argparse.Namespace) -> int:
             hint="Set audio_sources.recitation_url_template in config.yaml.",
         )
 
+    surah_number = config.project.surah
+    total = surah_index.ayah_count(surah_number)
+    offset = surah_index.global_offset(surah_number)
+    if offset:
+        console.print(
+            f"  [muted]surah {surah_number}: ayahs 1-{total}, "
+            f"mushaf-wide {offset + 1}-{offset + total}[/muted]"
+        )
+
     for template, directory, label in jobs:
         directory.mkdir(parents=True, exist_ok=True)
-        for number in range(1, 8):
+        for number in range(1, total + 1):
             # str.format understands the format spec, so a template can use
-            # either {ayah} or {ayah:03d}.
+            # either {ayah} or {ayah:03d}. {global_ayah} is the mushaf-wide
+            # number, which is what the Islamic Network CDN indexes by.
             try:
-                url = template.format(ayah=number)
+                url = template.format(ayah=number, global_ayah=offset + number)
             except (KeyError, IndexError, ValueError) as exc:
                 raise QVGError(
                     f"The URL template '{template}' could not be filled in: {exc}",
-                    hint="Use {ayah} or {ayah:03d} where the ayah number belongs, "
-                    "for example:\n"
+                    hint="Use {ayah} or {ayah:03d} for the number inside the surah, "
+                    "or {global_ayah} for the mushaf-wide number, for example:\n"
                     '  recitation_url_template: "https://example.org/audio/{ayah:03d}.mp3"',
                 )
             destination = directory / f"{number:03d}.mp3"
@@ -779,7 +803,7 @@ def cmd_clean(config: Config, args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python run.py",
-        description="Quran video generator - Surah Al-Fatihah",
+        description="Quran video generator",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Typical order:  validate  ->  preview  ->  render",
     )
@@ -821,7 +845,11 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_argument("--no-audio", action="store_true", help="use silent placeholder durations")
 
     sub = add("fetch-text", "Download the verified Quran text and Urdu translation")
-    sub.add_argument("--force", action="store_true", help="overwrite data/al_fatihah.json")
+    sub.add_argument(
+        "--surah", type=int, default=0, metavar="N",
+        help="surah to download, 1-114 (default: project.surah from config.yaml)",
+    )
+    sub.add_argument("--force", action="store_true", help="overwrite the data file")
     sub.add_argument("--arabic-edition", default="quran-uthmani")
     sub.add_argument("--urdu-edition", default="ur.junagarhi")
 

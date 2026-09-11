@@ -7,7 +7,6 @@ published Quran edition (or written by hand from a printed mushaf).
 
 from __future__ import annotations
 
-import re
 import unicodedata
 from typing import Optional
 
@@ -45,6 +44,35 @@ def to_arabic_digits(number: int) -> str:
 def strip_tashkeel(text: str) -> str:
     """Remove combining marks - used for width estimates and diagnostics only."""
     return "".join(c for c in text if not unicodedata.combining(c))
+
+
+# Categories that a standalone Quranic annotation token is made of: combining
+# marks (Mn/Me), modifier and other symbols (Sk/So - the waqf signs and the
+# rub' el hizb), and format characters (Cf).
+_ANNOTATION_CATEGORIES = frozenset({"Mn", "Me", "Sk", "So", "Cf"})
+
+
+def is_annotation(token: str) -> bool:
+    """True for a token that is only a Quranic annotation, never a spoken word.
+
+    The Uthmani text writes the waqf signs and the rub' el hizb as standalone
+    tokens with a space on either side. They are read as instructions to the
+    reciter, not aloud, so they carry no recitation timing and must not take a
+    word number.
+    """
+    return bool(token) and all(
+        unicodedata.category(char) in _ANNOTATION_CATEGORIES for char in token
+    )
+
+
+def recited_words(text: str) -> list[str]:
+    """The words of *text* that are actually said, in reading order.
+
+    This is the numbering everything else agrees on: the per-word highlight
+    masks the renderer measures, and the per-word timings published for the
+    recitation.
+    """
+    return [token for token in text.split() if token and not is_annotation(token)]
 
 
 class Ayah(BaseModel):
@@ -93,7 +121,8 @@ class Ayah(BaseModel):
 
     @property
     def word_count(self) -> int:
-        return len([w for w in re.split(r"\s+", self.arabic) if w])
+        """How many words the reciter says - annotation marks are not words."""
+        return len(recited_words(self.arabic))
 
     def summary(self) -> str:
         plain = strip_tashkeel(self.arabic)

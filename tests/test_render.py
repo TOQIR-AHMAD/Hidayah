@@ -676,9 +676,28 @@ def test_the_highlight_crossfades_between_words(job, prepared):
     assert overlaps == len(spans) - 1
 
 
-def test_the_highlight_is_not_gated_by_a_hard_switch(job):
-    """`enable` is binary - it would make the colour snap on and off."""
-    assert "enable=" not in job.filter_graph
+def test_the_highlight_gate_never_clips_its_own_fades(job):
+    """`enable` is binary, so it must not cut a ramp short.
+
+    The colour is shaped by the alpha ramps, not by the gate: the gate exists
+    only so FFmpeg can skip compositing a layer that is fully transparent
+    anyway - which, in a chunk carrying hundreds of words, is nearly all of
+    them on nearly every frame. It is therefore only correct while it opens no
+    later than the fade-in begins and closes no earlier than the fade-out ends.
+    """
+    fades = re.findall(
+        r"fade=t=in:st=([\d.]+):d=([\d.]+):alpha=1,"
+        r"fade=t=out:st=([\d.]+):d=([\d.]+):alpha=1,setsar=1\[hl\d+\]",
+        job.filter_graph,
+    )
+    gates = re.findall(r"enable='gte\(t,([\d.]+)\)\*lt\(t,([\d.]+)\)'", job.filter_graph)
+    assert fades and len(fades) == len(gates)
+
+    for (in_start, in_len, out_start, out_len), (opens, closes) in zip(fades, gates):
+        assert float(opens) <= float(in_start) + 1e-6
+        assert float(closes) >= float(out_start) + float(out_len) - 1e-6
+        # ... and the ramps are real ramps, not cuts.
+        assert float(in_len) > 0 and float(out_len) > 0
 
 
 def test_highlights_are_overlaid_after_the_cards(job):

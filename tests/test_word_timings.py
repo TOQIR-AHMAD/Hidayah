@@ -12,6 +12,39 @@ from app.services import word_timings as wt
 
 
 # ---------------------------------------------------------------------------
+# What counts as a word
+# ---------------------------------------------------------------------------
+# The Uthmani text writes the waqf signs as standalone tokens with a space on
+# either side. They are read as instructions, never aloud, so they carry no
+# timing - and if they took a word number the highlight would run one word
+# ahead of the reciter for the rest of the ayah.
+
+WITH_WAQF = "ذٰلِكَ ٱلْكِتَٰبُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًًى"
+
+
+def test_a_standalone_waqf_sign_is_not_a_word():
+    from app.models.ayah import recited_words
+
+    assert len(WITH_WAQF.split()) == 8
+    assert len(recited_words(WITH_WAQF)) == 6
+
+
+def test_the_layout_numbers_words_the_same_way():
+    """The masks the renderer measures must agree with the timings."""
+    from app.models.ayah import recited_words
+    from app.services.text import _word_of_character
+
+    mapping = _word_of_character(WITH_WAQF)
+    assert max(mapping) == len(recited_words(WITH_WAQF)) - 1
+
+
+def test_an_estimate_shares_time_between_spoken_words_only():
+    timings = wt.estimate(2, WITH_WAQF, 6.0)
+    assert len(timings.words) == 6
+    assert "ۛ" not in [word.text for word in timings.words]
+
+
+# ---------------------------------------------------------------------------
 # The estimator (the fallback when nothing is published)
 # ---------------------------------------------------------------------------
 

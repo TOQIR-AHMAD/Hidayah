@@ -61,7 +61,11 @@ def test_rejects_out_of_order_numbering(tmp_path, surah_payload):
     path = _write(tmp_path / "shuffled.json", surah_payload)
     with pytest.raises(QVGError) as excinfo:
         load_surah(path)
-    assert "1,2,3,4,5,6,7" in excinfo.value.message
+    # The message names the first break rather than listing every number -
+    # a surah can have 286 of them.
+    message = excinfo.value.message
+    assert "1..7 in order" in message
+    assert "position 3" in message
 
 
 def test_rejects_mismatched_ayah_count_field(tmp_path, surah_payload):
@@ -94,12 +98,38 @@ def test_rejects_empty_urdu_translation(tmp_path, surah_payload):
         load_surah(path)
 
 
-def test_rejects_other_surahs(tmp_path, surah_payload):
+def test_accepts_any_surah_with_the_right_number_of_ayahs(tmp_path, surah_payload):
+    """Any of the 114 loads - but its ayah count must be that surah's."""
+    surah_payload["surah_number"] = 112
+    surah_payload["name_english"] = "Al-Ikhlas"
+    surah_payload["ayah_count"] = 4
+    surah_payload["ayahs"] = surah_payload["ayahs"][:4]
+    path = _write(tmp_path / "ikhlas.json", surah_payload)
+
+    surah = load_surah(path)
+
+    assert surah.surah_number == 112
+    assert surah.ayah_count == 4
+    # Al-Ikhlas begins at ayah 6222 of the mushaf, which is what the audio
+    # source indexes by.
+    assert surah.global_offset == 6221
+
+
+def test_rejects_a_surah_with_the_wrong_number_of_ayahs(tmp_path, surah_payload):
+    """Seven ayahs labelled "surah 2" is a truncated download, not Al-Baqarah."""
     surah_payload["surah_number"] = 2
     path = _write(tmp_path / "baqarah.json", surah_payload)
     with pytest.raises(QVGError) as excinfo:
         load_surah(path)
-    assert "Al-Fatihah only" in excinfo.value.message
+    assert "286 ayahs" in excinfo.value.message
+
+
+def test_rejects_a_surah_number_that_does_not_exist(tmp_path, surah_payload):
+    surah_payload["surah_number"] = 115
+    path = _write(tmp_path / "nosuch.json", surah_payload)
+    with pytest.raises(QVGError) as excinfo:
+        load_surah(path)
+    assert "between 1 and 114" in excinfo.value.message
 
 
 def test_rejects_broken_json(tmp_path):

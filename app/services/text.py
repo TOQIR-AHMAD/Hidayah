@@ -19,6 +19,7 @@ arabic-reshaper + python-bidi + Pillow is used instead, and a warning is logged.
 
 from __future__ import annotations
 
+import re
 import unicodedata
 from dataclasses import dataclass, field
 from functools import lru_cache
@@ -27,6 +28,7 @@ from typing import Iterable, Optional, Sequence
 
 from PIL import Image, ImageChops, ImageFilter
 
+from app.models.ayah import is_annotation
 from app.utils.logging import QVGError, get_logger
 
 try:  # pragma: no cover - import guard
@@ -228,21 +230,25 @@ def _word_of_character(text: str) -> list[int]:
 
     Whitespace between words is attributed to the word that just ended, so a
     highlight drawn from these indices never reaches into the next word's
-    space. Counting matches str.split(), which is what the timings are keyed
-    on.
+    space. Counting matches models.ayah.recited_words, which is what the
+    timings are keyed on - so a standalone waqf sign is attributed to the word
+    before it rather than taking a number of its own.
     """
-    mapping: list[int] = []
+    mapping: list[int] = [0] * len(text)
     word = -1
-    in_word = False
-    for char in text:
-        if char.isspace():
-            in_word = False
-            mapping.append(max(0, word))
-        else:
-            if not in_word:
-                word += 1
-                in_word = True
-            mapping.append(word)
+    position = 0
+    for token in re.finditer(r"\S+", text):
+        if not is_annotation(token.group()):
+            word += 1
+        start, end = token.span()
+        # The gap before this token belongs to whatever came before it.
+        for index in range(position, start):
+            mapping[index] = max(0, word - 1 if word >= 0 else 0)
+        for index in range(start, end):
+            mapping[index] = max(0, word)
+        position = end
+    for index in range(position, len(text)):
+        mapping[index] = max(0, word)
     return mapping
 
 

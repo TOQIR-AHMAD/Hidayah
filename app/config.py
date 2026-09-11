@@ -15,9 +15,76 @@ from app.utils.logging import QVGError
 Hex = str
 
 
+class RenderSettings(BaseModel):
+    """How a long surah is broken up for rendering.
+
+    Al-Fatihah is 7 cards and 29 word highlights, which FFmpeg composites in a
+    single pass. Al-Baqarah is 286 cards and 6115 highlights: one graph would
+    need some 6700 open inputs and every one of them decoded in memory at once.
+    Above the thresholds here the picture is rendered in pieces that each cut on
+    a card boundary, and the pieces are joined without re-encoding - so the
+    finished file is what the single pass would have produced, had it fitted.
+    """
+
+    # 0 disables chunking entirely (one pass, whatever the length).
+    chunk_highlights: int = 0
+    chunk_seconds: float = 0.0
+    workers: int = 0
+    keep_parts: bool = False
+
+    @field_validator("chunk_highlights", "workers")
+    @classmethod
+    def _not_negative(cls, value: int) -> int:
+        if value < 0:
+            raise ValueError("must be 0 or more")
+        return value
+
+    @property
+    def chunked(self) -> bool:
+        return self.chunk_highlights > 0 or self.chunk_seconds > 0
+
+    # What one chunk encoder needs resident. Measured at 1080p with roughly a
+    # hundred word highlights in the chunk; a chunk twice that size needs more,
+    # which is the other reason to keep chunks small.
+    MEMORY_PER_WORKER_MB: ClassVar[float] = 1200.0
+
+    def worker_count(self, available_memory_mb: Optional[float] = None) -> int:
+        """How many chunks to encode at once.
+
+        One core is left for the rest of the machine, and the count is capped at
+        four: past that the encoders contend for memory bandwidth and the wall
+        clock stops improving.
+
+        Memory is the harder limit. Each encoder holds all of its chunk's
+        stills decoded, so putting more of them on a machine than its RAM can
+        hold does not render faster - it renders into the page file, which is
+        slower than running them one at a time, and can have one killed.
+        """
+        if self.workers > 0:
+            return self.workers
+
+        cores = os.cpu_count() or 2
+        count = max(1, min(4, cores - 1))
+        if available_memory_mb is not None:
+            # Leave a gigabyte for the machine to go on being a machine.
+            affordable = int((available_memory_mb - 1024) // self.MEMORY_PER_WORKER_MB)
+            count = max(1, min(count, affordable))
+        return count
+
+
 class ProjectSettings(BaseModel):
     name: str = "Surah Al-Fatihah"
     slug: str = "001_Al-Fatihah"
+    # Which of the 114 surahs this config renders. `fetch-text` and
+    # `fetch-audio` use it, and `validate` checks the data file against it.
+    surah: int = 1
+
+    @field_validator("surah")
+    @classmethod
+    def _known_surah(cls, value: int) -> int:
+        if not 1 <= value <= 114:
+            raise ValueError(f"surah must be between 1 and 114, got {value}")
+        return value
 
 
 class PathSettings(BaseModel):
@@ -512,6 +579,7 @@ class ThumbnailSettings(BaseModel):
 
 class Config(BaseModel):
     project: ProjectSettings = Field(default_factory=ProjectSettings)
+    render: RenderSettings = Field(default_factory=RenderSettings)
     paths: PathSettings = Field(default_factory=PathSettings)
     video: VideoSettings = Field(default_factory=VideoSettings)
     preview: PreviewSettings = Field(default_factory=PreviewSettings)

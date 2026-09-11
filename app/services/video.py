@@ -5,9 +5,10 @@ from __future__ import annotations
 import subprocess
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 from rich.progress import (
     BarColumn,
@@ -36,12 +37,30 @@ class FFmpegInput:
 
 
 @dataclass
+class ExtraOutput:
+    """A second file written by the same FFmpeg run.
+
+    One decode and one filter pass can feed several outputs. A chunked render
+    uses that to write the picture and the sound of a chunk at once, so the
+    graph is built - and the stills decoded - only once.
+    """
+
+    maps: list[str]
+    options: list[str]
+    path: Path
+
+    def as_args(self) -> list[str]:
+        return [*self.maps, *self.options, str(self.path)]
+
+
+@dataclass
 class FFmpegJob:
     inputs: list[FFmpegInput] = field(default_factory=list)
     filters: list[str] = field(default_factory=list)
     maps: list[str] = field(default_factory=list)
     output_options: list[str] = field(default_factory=list)
     output: Optional[Path] = None
+    extra_outputs: list[ExtraOutput] = field(default_factory=list)
     # Where `output` should end up once FFmpeg exits cleanly. Encoding straight
     # to the published path leaves a truncated file behind on interrupt.
     final_output: Optional[Path] = None
@@ -76,11 +95,19 @@ class FFmpegJob:
         args.extend(self.output_options)
         if self.output is not None:
             args.append(str(self.output))
+        for extra in self.extra_outputs:
+            args.extend(extra.as_args())
         return args
 
 
-def encoder_options(config: Config, preview: bool) -> list[str]:
-    """Video/audio encoding flags for either the final render or the preview."""
+def encoder_options(
+    config: Config, preview: bool, audio: bool = True
+) -> list[str]:
+    """Video/audio encoding flags for either the final render or the preview.
+
+    Set *audio* false for a picture-only output - one chunk of a chunked
+    render, whose sound is written beside it as a separate file.
+    """
     video = config.video
     if preview:
         crf = config.preview.crf
@@ -101,11 +128,16 @@ def encoder_options(config: Config, preview: bool) -> list[str]:
         "-r", str(fps),
         "-profile:v", "high",
         "-level", "4.1",
-        "-c:a", video.audio_codec,
-        "-b:a", audio_bitrate,
-        "-ar", str(video.audio_sample_rate),
-        "-ac", "2",
     ]
+    if audio:
+        options.extend([
+            "-c:a", video.audio_codec,
+            "-b:a", audio_bitrate,
+            "-ar", str(video.audio_sample_rate),
+            "-ac", "2",
+        ])
+    else:
+        options.append("-an")
     if video.threads:
         options.extend(["-threads", str(video.threads)])
     if video.faststart:
@@ -257,6 +289,114 @@ def run_job(
             )
 
     return time.monotonic() - started
+
+
+# ---------------------------------------------------------------------------
+# Several encodes at once
+# ---------------------------------------------------------------------------
+
+@dataclass
+class ParallelTask:
+    """One FFmpeg run inside a batch."""
+
+    job: FFmpegJob
+    label: str
+    filter_script: Path
+    weight: float = 1.0
+
+
+def run_parallel(
+    tasks: Sequence[ParallelTask],
+    workers: int,
+    description: str,
+    on_done: Optional[Callable[[ParallelTask, float], None]] = None,
+) -> float:
+    """Run *tasks* with at most *workers* FFmpeg processes at a time.
+
+    Each task is a whole chunk of the video, so there is nothing to share
+    between them and nothing to synchronise: the only coordination is the
+    progress bar, which advances by a chunk's length as that chunk lands.
+
+    The first failure stops the batch. Chunks that had already finished are left
+    on disk, and the next run picks them up instead of encoding them again.
+    """
+    if not tasks:
+        return 0.0
+
+    started = time.monotonic()
+    log = get_logger()
+    total_weight = sum(max(0.0, task.weight) for task in tasks) or float(len(tasks))
+    lock = threading.Lock()
+
+    columns = [
+        SpinnerColumn(style="accent"),
+        TextColumn("[white]{task.description}"),
+        BarColumn(complete_style="gold1", finished_style="green"),
+        TextColumn("{task.percentage:>5.1f}%"),
+        TimeElapsedColumn(),
+        TimeRemainingColumn(),
+    ]
+
+    with Progress(*columns, console=console, transient=False) as progress:
+        bar = progress.add_task(description, total=total_weight)
+
+        def execute(task: ParallelTask) -> None:
+            elapsed = run_job(
+                task.job,
+                description=task.label,
+                filter_script=task.filter_script,
+                show_progress=False,
+            )
+            with lock:
+                progress.advance(bar, max(0.0, task.weight))
+                log.info("%s finished in %.1fs", task.label, elapsed)
+                if on_done is not None:
+                    on_done(task, elapsed)
+
+        with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+            futures = [pool.submit(execute, task) for task in tasks]
+            first_error: Optional[BaseException] = None
+            for future in futures:
+                try:
+                    future.result()
+                except BaseException as exc:  # noqa: BLE001 - re-raised below
+                    if first_error is None:
+                        first_error = exc
+                        for pending in futures:
+                            pending.cancel()
+            if first_error is not None:
+                raise first_error
+
+    return time.monotonic() - started
+
+
+# ---------------------------------------------------------------------------
+# Joining the pieces of a chunked render
+# ---------------------------------------------------------------------------
+
+def write_concat_list(parts: Sequence[Path], destination: Path) -> Path:
+    """Write the concat demuxer's list file.
+
+    Paths are written with forward slashes and single quotes escaped, which is
+    what the demuxer's parser expects on every platform.
+    """
+    if not parts:
+        raise QVGError("There is nothing to join: no chunk was rendered.")
+    missing = [part for part in parts if not part.is_file()]
+    if missing:
+        raise QVGError(
+            f"{len(missing)} chunk file(s) are missing, the first being "
+            f"{missing[0].name}.",
+            hint="Re-run the render; chunks that are already finished are reused.",
+        )
+
+    lines = []
+    for part in parts:
+        text = str(part.resolve()).replace("\\", "/").replace("'", "'\\''")
+        lines.append(f"file '{text}'")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return destination
 
 
 def _explain_ffmpeg_error(stderr: str) -> str:

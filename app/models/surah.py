@@ -1,6 +1,8 @@
-"""The Surah model and the loader for data/al_fatihah.json.
+"""The Surah model and the loader for the surah JSON file.
 
-This first version deliberately supports Surah Al-Fatihah only.
+Any of the 114 surahs may be loaded. The ayah count is not taken on trust from
+the file - it is checked against app.models.surah_index, so a truncated or
+mis-numbered download is refused rather than rendered.
 """
 
 from __future__ import annotations
@@ -11,6 +13,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 
 from app.models.ayah import Ayah
+from app.models.surah_index import SURAH_COUNT, ayah_count as expected_ayah_count
 from app.utils.logging import QVGError
 
 AL_FATIHAH_NUMBER = 1
@@ -49,32 +52,42 @@ class Surah(BaseModel):
 
     @field_validator("surah_number")
     @classmethod
-    def _only_al_fatihah(cls, value: int) -> int:
-        if value != AL_FATIHAH_NUMBER:
+    def _known_surah(cls, value: int) -> int:
+        if not 1 <= value <= SURAH_COUNT:
             raise ValueError(
-                f"this version supports Surah Al-Fatihah only, but surah_number is {value}"
+                f"surah_number must be between 1 and {SURAH_COUNT}, got {value}"
             )
         return value
 
     @model_validator(mode="after")
     def _validate_ayahs(self) -> "Surah":
+        expected = expected_ayah_count(self.surah_number)
         numbers = [a.number for a in self.ayahs]
 
-        if len(self.ayahs) != AL_FATIHAH_AYAH_COUNT:
+        if len(self.ayahs) != expected:
             raise ValueError(
-                f"Surah Al-Fatihah has {AL_FATIHAH_AYAH_COUNT} ayahs, "
+                f"Surah {self.surah_number} ({self.name_english}) has {expected} ayahs, "
                 f"but the file contains {len(self.ayahs)}"
             )
-        if self.ayah_count != AL_FATIHAH_AYAH_COUNT:
-            raise ValueError(
-                f"ayah_count must be {AL_FATIHAH_AYAH_COUNT}, got {self.ayah_count}"
+        if self.ayah_count != expected:
+            raise ValueError(f"ayah_count must be {expected}, got {self.ayah_count}")
+        if numbers != list(range(1, expected + 1)):
+            # Naming the first break is far more useful than printing 286 numbers.
+            first_bad = next(
+                (i for i, n in enumerate(numbers, start=1) if n != i), len(numbers) + 1
             )
-        if numbers != list(range(1, AL_FATIHAH_AYAH_COUNT + 1)):
             raise ValueError(
-                "ayah numbers must be exactly 1,2,3,4,5,6,7 in order - got "
-                f"{numbers}"
+                f"ayah numbers must run 1..{expected} in order, but position "
+                f"{first_bad} carries number {numbers[first_bad - 1]}"
             )
         return self
+
+    @property
+    def global_offset(self) -> int:
+        """Ayahs in the mushaf before this surah - see models.surah_index."""
+        from app.models.surah_index import global_offset
+
+        return global_offset(self.surah_number)
 
     # -- convenience ---------------------------------------------------------
     def ayah(self, number: int) -> Ayah:

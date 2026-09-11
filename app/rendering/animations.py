@@ -17,6 +17,16 @@ def _f(value: float, places: int = 4) -> str:
     return f"{value:.{places}f}".rstrip("0").rstrip(".") or "0"
 
 
+def clock(offset: float = 0.0) -> str:
+    """The timeline clock, shifted for a chunk that does not start at zero.
+
+    Inside a filter expression `t` is the time since the START OF THIS ENCODE.
+    When the encode is one chunk of a longer video, every expression written
+    against the whole video's clock has to be given the chunk's own start.
+    """
+    return "t" if abs(offset) < 1e-9 else f"(t+{_f(offset)})"
+
+
 def positive_mod(expression: str, period: float) -> str:
     """FFmpeg's mod() keeps the sign of its first argument; this never does."""
     p = _f(period)
@@ -44,6 +54,8 @@ def ken_burns(
     zoom_end: float,
     pan_x: float,
     pan_y: float,
+    start_frame: int = 0,
+    span_frames: int = 0,
 ) -> str:
     """A slow push-in with a drift, applied to a still background.
 
@@ -52,8 +64,14 @@ def ken_burns(
     the final frame - which is what removes the stepping this filter is usually
     blamed for - and no per-frame rescale is needed here.
     """
-    total_frames = max(2, int(round(duration * fps)))
-    progress = f"(on/{total_frames - 1})"
+    # *span_frames* is the length of the WHOLE video and *start_frame* where
+    # this piece of it begins; a one-pass render leaves both at their defaults
+    # and the move runs from 0 to 1 across the only piece there is.
+    total_frames = max(2, span_frames or int(round(duration * fps)))
+    if start_frame:
+        progress = f"((on+{start_frame})/{total_frames - 1})"
+    else:
+        progress = f"(on/{total_frames - 1})"
 
     zoom = f"{_f(zoom_start)}+{_f(zoom_end - zoom_start)}*{progress}"
     x = f"iw/2-(iw/zoom/2)+({_f(pan_x)}*iw)*{progress}"
@@ -226,7 +244,8 @@ def quantise_speed(pixels_per_second: float, fps: int) -> float:
 
 
 def wrapping_drift(
-    speed_x: float, speed_y: float, period_x: float, period_y: float, fps: int
+    speed_x: float, speed_y: float, period_x: float, period_y: float, fps: int,
+    offset: float = 0.0,
 ) -> DriftExpressions:
     """Endless scroll for a layer that tiles with period (period_x, period_y).
 
@@ -236,20 +255,23 @@ def wrapping_drift(
     """
     step_x = quantise_speed(speed_x, fps)
     step_y = quantise_speed(speed_y, fps)
-    x = f"-({positive_mod(f'{_f(step_x)}*t', period_x)})" if step_x else "0"
-    y = f"-({positive_mod(f'{_f(step_y)}*t', period_y)})" if step_y else "0"
+    now = clock(offset)
+    x = f"-({positive_mod(f'{_f(step_x)}*{now}', period_x)})" if step_x else "0"
+    y = f"-({positive_mod(f'{_f(step_y)}*{now}', period_y)})" if step_y else "0"
     return DriftExpressions(x=x, y=y)
 
 
 def sine_drift(amplitude_x: float, amplitude_y: float,
-               period_x: float = 47.0, period_y: float = 61.0) -> DriftExpressions:
+               period_x: float = 47.0, period_y: float = 61.0,
+               offset: float = 0.0) -> DriftExpressions:
     """Slow, seamless wandering for a single large soft element.
 
     The two periods are deliberately not multiples of one another, so the
     motion takes minutes to visibly repeat.
     """
-    x = f"(W-w)/2+sin(t*2*PI/{_f(period_x)})*{_f(amplitude_x)}"
-    y = f"(H-h)/2+cos(t*2*PI/{_f(period_y)})*{_f(amplitude_y)}"
+    now = clock(offset)
+    x = f"(W-w)/2+sin({now}*2*PI/{_f(period_x)})*{_f(amplitude_x)}"
+    y = f"(H-h)/2+cos({now}*2*PI/{_f(period_y)})*{_f(amplitude_y)}"
     return DriftExpressions(x=x, y=y)
 
 
