@@ -1,0 +1,90 @@
+{
+  "surah_number": 102,
+  "name_arabic": "التَّكَاثُر",
+  "name_english": "At-Takaathur",
+  "name_urdu": "التَّكَاثُر",
+  "ayah_count": 8,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "أَلْهَىٰكُمُ ٱلتَّكَاثُرُ",
+      "urdu_translation": "زیادتی کی چاہت نے تمہیں غافل کردیا",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Competition in [worldly] increase diverts you"
+    },
+    {
+      "number": 2,
+      "arabic": "حَتَّىٰ زُرْتُمُ ٱلْمَقَابِرَ",
+      "urdu_translation": "یہاں تک کہ تم قبرستان جا پہنچے",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "Until you visit the graveyards."
+    },
+    {
+      "number": 3,
+      "arabic": "كَلَّا سَوْفَ تَعْلَمُونَ",
+      "urdu_translation": "ہرگز نہیں تم عنقریب معلوم کر لو گے",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "No! You are going to know."
+    },
+    {
+      "number": 4,
+      "arabic": "ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ",
+      "urdu_translation": "ہرگز نہیں پھر تمہیں جلد علم ہو جائے گا",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "Then no! You are going to know."
+    },
+    {
+      "number": 5,
+      "arabic": "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ ٱلْيَقِينِ",
+      "urdu_translation": "ہرگز نہیں اگر تم یقینی طور پر جان لو",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "No! If you only knew with knowledge of certainty..."
+    },
+    {
+      "number": 6,
+      "arabic": "لَتَرَوُنَّ ٱلْجَحِيمَ",
+      "urdu_translation": "تو بیشک تم جہنم دیکھ لو گے",
+      "recitation": "assets/audio/recitation/006.mp3",
+      "urdu_audio": "assets/audio/urdu/006.mp3",
+      "transliteration": null,
+      "english_translation": "You will surely see the Hellfire."
+    },
+    {
+      "number": 7,
+      "arabic": "ثُمَّ لَتَرَوُنَّهَا عَيْنَ ٱلْيَقِينِ",
+      "urdu_translation": "اور تم اسے یقین کی آنکھ سے دیکھ لو گے",
+      "recitation": "assets/audio/recitation/007.mp3",
+      "urdu_audio": "assets/audio/urdu/007.mp3",
+      "transliteration": null,
+      "english_translation": "Then you will surely see it with the eye of certainty."
+    },
+    {
+      "number": 8,
+      "arabic": "ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ",
+      "urdu_translation": "پھر اس دن تم سے ضرور بالضرور نعمتوں کا سوال ہوگا",
+      "recitation": "assets/audio/recitation/008.mp3",
+      "urdu_audio": "assets/audio/urdu/008.mp3",
+      "transliteration": null,
+      "english_translation": "Then you will surely be asked that Day about pleasure."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/102/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/102/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

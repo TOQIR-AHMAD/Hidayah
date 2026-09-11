@@ -1,0 +1,20 @@
+[Script Info]
+Title: Surah 103 - Al-Asr
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Arabic,Amiri Quran,48,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+Style: Urdu,Noto Nastaliq Urdu,42,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+Dialogue: 0,0:00:00.16,0:00:01.66,Arabic,,0,0,0,,وَٱلْعَصْرِ
+Dialogue: 0,0:00:01.86,0:00:06.57,Arabic,,0,0,0,,إِنَّ ٱلْإِنسَٰنَ لَفِى خُسْرٍ
+Dialogue: 0,0:00:06.77,0:00:16.88,Arabic,,0,0,0,,إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ

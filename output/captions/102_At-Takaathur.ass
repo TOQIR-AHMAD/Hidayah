@@ -1,0 +1,25 @@
+[Script Info]
+Title: Surah 102 - At-Takaathur
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Arabic,Amiri Quran,48,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+Style: Urdu,Noto Nastaliq Urdu,42,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+Dialogue: 0,0:00:00.16,0:00:02.97,Arabic,,0,0,0,,أَلْهَىٰكُمُ ٱلتَّكَاثُرُ
+Dialogue: 0,0:00:03.17,0:00:06.45,Arabic,,0,0,0,,حَتَّىٰ زُرْتُمُ ٱلْمَقَابِرَ
+Dialogue: 0,0:00:06.65,0:00:11.02,Arabic,,0,0,0,,كَلَّا سَوْفَ تَعْلَمُونَ
+Dialogue: 0,0:00:11.22,0:00:16.69,Arabic,,0,0,0,,ثُمَّ كَلَّا سَوْفَ تَعْلَمُونَ
+Dialogue: 0,0:00:16.89,0:00:22.22,Arabic,,0,0,0,,كَلَّا لَوْ تَعْلَمُونَ عِلْمَ ٱلْيَقِينِ
+Dialogue: 0,0:00:22.42,0:00:27.38,Arabic,,0,0,0,,لَتَرَوُنَّ ٱلْجَحِيمَ
+Dialogue: 0,0:00:27.58,0:00:34.09,Arabic,,0,0,0,,ثُمَّ لَتَرَوُنَّهَا عَيْنَ ٱلْيَقِينِ
+Dialogue: 0,0:00:34.29,0:00:44.39,Arabic,,0,0,0,,ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ

@@ -1,0 +1,28 @@
+[Script Info]
+Title: Surah 100 - Al-Aadiyaat
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Arabic,Amiri Quran,48,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+Style: Urdu,Noto Nastaliq Urdu,42,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+Dialogue: 0,0:00:00.16,0:00:02.86,Arabic,,0,0,0,,وَٱلْعَٰدِيَٰتِ ضَبْحًۭا
+Dialogue: 0,0:00:03.06,0:00:05.74,Arabic,,0,0,0,,فَٱلْمُورِيَٰتِ قَدْحًۭا
+Dialogue: 0,0:00:05.94,0:00:08.49,Arabic,,0,0,0,,فَٱلْمُغِيرَٰتِ صُبْحًۭا
+Dialogue: 0,0:00:08.69,0:00:11.22,Arabic,,0,0,0,,فَأَثَرْنَ بِهِۦ نَقْعًۭا
+Dialogue: 0,0:00:11.42,0:00:14.14,Arabic,,0,0,0,,فَوَسَطْنَ بِهِۦ جَمْعًا
+Dialogue: 0,0:00:14.34,0:00:20.56,Arabic,,0,0,0,,إِنَّ ٱلْإِنسَٰنَ لِرَبِّهِۦ لَكَنُودٌۭ
+Dialogue: 0,0:00:20.76,0:00:26.25,Arabic,,0,0,0,,وَإِنَّهُۥ عَلَىٰ ذَٰلِكَ لَشَهِيدٌۭ
+Dialogue: 0,0:00:26.45,0:00:32.22,Arabic,,0,0,0,,وَإِنَّهُۥ لِحُبِّ ٱلْخَيْرِ لَشَدِيدٌ
+Dialogue: 0,0:00:32.42,0:00:38.18,Arabic,,0,0,0,,۞ أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِى ٱلْقُبُورِ
+Dialogue: 0,0:00:38.38,0:00:42.37,Arabic,,0,0,0,,وَحُصِّلَ مَا فِى ٱلصُّدُورِ
+Dialogue: 0,0:00:42.57,0:00:51.09,Arabic,,0,0,0,,إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍۢ لَّخَبِيرٌۢ

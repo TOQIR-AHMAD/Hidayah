@@ -1,0 +1,99 @@
+{
+  "surah_number": 104,
+  "name_arabic": "الهُمَزَة",
+  "name_english": "Al-Humaza",
+  "name_urdu": "الهُمَزَة",
+  "ayah_count": 9,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "وَيْلٌۭ لِّكُلِّ هُمَزَةٍۢ لُّمَزَةٍ",
+      "urdu_translation": "بڑی خرابی ہے ہر ایسے شخص کی جو عیب ٹٹولنے والا غیبت کرنے والا ہو",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Woe to every scorner and mocker"
+    },
+    {
+      "number": 2,
+      "arabic": "ٱلَّذِى جَمَعَ مَالًۭا وَعَدَّدَهُۥ",
+      "urdu_translation": "جو مال کو جمع کرتا جائے اور گنتا جائے",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "Who collects wealth and [continuously] counts it."
+    },
+    {
+      "number": 3,
+      "arabic": "يَحْسَبُ أَنَّ مَالَهُۥٓ أَخْلَدَهُۥ",
+      "urdu_translation": "وه سمجھتا ہے کہ اس کا مال اس کے پاس سدا رہے گا",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "He thinks that his wealth will make him immortal."
+    },
+    {
+      "number": 4,
+      "arabic": "كَلَّا ۖ لَيُنۢبَذَنَّ فِى ٱلْحُطَمَةِ",
+      "urdu_translation": "ہرگز نہیں یہ تو ضرور توڑ پھوڑ دینے والی آگ میں پھینک دیا جائے گا",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "No! He will surely be thrown into the Crusher."
+    },
+    {
+      "number": 5,
+      "arabic": "وَمَآ أَدْرَىٰكَ مَا ٱلْحُطَمَةُ",
+      "urdu_translation": "اور تجھے کیا معلوم کہ ایسی آگ کیا ہوگی؟",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "And what can make you know what is the Crusher?"
+    },
+    {
+      "number": 6,
+      "arabic": "نَارُ ٱللَّهِ ٱلْمُوقَدَةُ",
+      "urdu_translation": "وه اللہ تعالیٰ کی سلگائی ہوئی آگ ہوگی",
+      "recitation": "assets/audio/recitation/006.mp3",
+      "urdu_audio": "assets/audio/urdu/006.mp3",
+      "transliteration": null,
+      "english_translation": "It is the fire of Allah, [eternally] fueled,"
+    },
+    {
+      "number": 7,
+      "arabic": "ٱلَّتِى تَطَّلِعُ عَلَى ٱلْأَفْـِٔدَةِ",
+      "urdu_translation": "جو دلوں پر چڑھتی چلی جائے گی",
+      "recitation": "assets/audio/recitation/007.mp3",
+      "urdu_audio": "assets/audio/urdu/007.mp3",
+      "transliteration": null,
+      "english_translation": "Which mounts directed at the hearts."
+    },
+    {
+      "number": 8,
+      "arabic": "إِنَّهَا عَلَيْهِم مُّؤْصَدَةٌۭ",
+      "urdu_translation": "وہ ان پر ہر طرف سے بند کی ہوئی ہوگی",
+      "recitation": "assets/audio/recitation/008.mp3",
+      "urdu_audio": "assets/audio/urdu/008.mp3",
+      "transliteration": null,
+      "english_translation": "Indeed, Hellfire will be closed down upon them"
+    },
+    {
+      "number": 9,
+      "arabic": "فِى عَمَدٍۢ مُّمَدَّدَةٍۭ",
+      "urdu_translation": "بڑے بڑے ستونوں میں",
+      "recitation": "assets/audio/recitation/009.mp3",
+      "urdu_audio": "assets/audio/urdu/009.mp3",
+      "transliteration": null,
+      "english_translation": "In extended columns."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/104/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/104/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

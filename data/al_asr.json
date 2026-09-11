@@ -1,0 +1,45 @@
+{
+  "surah_number": 103,
+  "name_arabic": "العَصۡر",
+  "name_english": "Al-Asr",
+  "name_urdu": "العَصۡر",
+  "ayah_count": 3,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "وَٱلْعَصْرِ",
+      "urdu_translation": "زمانے کی قسم",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "By time,"
+    },
+    {
+      "number": 2,
+      "arabic": "إِنَّ ٱلْإِنسَٰنَ لَفِى خُسْرٍ",
+      "urdu_translation": "بیشک (بالیقین) انسان سرتا سر نقصان میں ہے",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "Indeed, mankind is in loss,"
+    },
+    {
+      "number": 3,
+      "arabic": "إِلَّا ٱلَّذِينَ ءَامَنُوا۟ وَعَمِلُوا۟ ٱلصَّٰلِحَٰتِ وَتَوَاصَوْا۟ بِٱلْحَقِّ وَتَوَاصَوْا۟ بِٱلصَّبْرِ",
+      "urdu_translation": "سوائے ان لوگوں کے جو ایمان لائے اور نیک عمل کیے اور (جنہوں نے) آپس میں حق کی وصیت کی اور ایک دوسرے کو صبر کی نصیحت کی",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "Except for those who have believed and done righteous deeds and advised each other to truth and advised each other to patience."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/103/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/103/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

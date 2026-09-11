@@ -1,0 +1,101 @@
+{
+  "surah_number": 103,
+  "source": {
+    "name": "Quran.com API v4",
+    "url": "https://api.quran.com/api/v4/recitations/7/by_chapter/103?per_page=300&fields=segments",
+    "recitation_id": 7,
+    "reciter": "Mishary Rashid Alafasy",
+    "fetched_on": "2026-09-11",
+    "note": "Word timings only. No audio is taken from this source; they describe the recitation you supply in assets/audio."
+  },
+  "ayahs": {
+    "1": {
+      "words": [
+        "وَٱلْعَصْرِ"
+      ],
+      "timings": [
+        [
+          0.03,
+          1.23
+        ]
+      ]
+    },
+    "2": {
+      "words": [
+        "إِنَّ",
+        "ٱلْإِنسَٰنَ",
+        "لَفِى",
+        "خُسْرٍ"
+      ],
+      "timings": [
+        [
+          0.03,
+          1.26
+        ],
+        [
+          1.27,
+          3.83
+        ],
+        [
+          3.84,
+          4.43
+        ],
+        [
+          4.44,
+          4.9
+        ]
+      ]
+    },
+    "3": {
+      "words": [
+        "إِلَّا",
+        "ٱلَّذِينَ",
+        "ءَامَنُوا۟",
+        "وَعَمِلُوا۟",
+        "ٱلصَّٰلِحَٰتِ",
+        "وَتَوَاصَوْا۟",
+        "بِٱلْحَقِّ",
+        "وَتَوَاصَوْا۟",
+        "بِٱلصَّبْرِ"
+      ],
+      "timings": [
+        [
+          0.05,
+          0.6
+        ],
+        [
+          0.61,
+          1.75
+        ],
+        [
+          1.76,
+          2.91
+        ],
+        [
+          2.92,
+          3.74
+        ],
+        [
+          3.75,
+          5.33
+        ],
+        [
+          5.34,
+          6.61
+        ],
+        [
+          6.62,
+          7.7
+        ],
+        [
+          7.71,
+          9.06
+        ],
+        [
+          9.07,
+          10.08
+        ]
+      ]
+    }
+  }
+}

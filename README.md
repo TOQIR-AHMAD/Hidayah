@@ -94,8 +94,8 @@ python run.py --config config.al-ikhlas.yaml validate
 python run.py --config config.al-ikhlas.yaml render
 ```
 
-Built so far: **Al-Fatihah (1)**, **Al-Fil (105)** through **An-Nas (114)**, and
-a config for **Al-Baqarah (2)** whose recitation downloads on demand.
+Built so far: **Al-Fatihah (1)**, **Al-Adiyat (100)** through **An-Nas (114)**,
+and a config for **Al-Baqarah (2)** whose recitation downloads on demand.
 
 **Long surahs.** Al-Fatihah is a single FFmpeg pass — 7 cards and 29 word
 highlights. Al-Baqarah is 286 cards and 6115 highlights, which as one graph

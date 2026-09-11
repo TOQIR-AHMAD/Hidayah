@@ -1,0 +1,117 @@
+{
+  "surah_number": 100,
+  "name_arabic": "العَادِيَات",
+  "name_english": "Al-Aadiyaat",
+  "name_urdu": "العَادِيَات",
+  "ayah_count": 11,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "وَٱلْعَٰدِيَٰتِ ضَبْحًۭا",
+      "urdu_translation": "ہانپتے ہوئے دوڑنے والے گھوڑوں کی قسم!",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "By the racers, panting,"
+    },
+    {
+      "number": 2,
+      "arabic": "فَٱلْمُورِيَٰتِ قَدْحًۭا",
+      "urdu_translation": "پھر ٹاپ مار کر آگ جھاڑنے والوں کی قسم!",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "And the producers of sparks [when] striking"
+    },
+    {
+      "number": 3,
+      "arabic": "فَٱلْمُغِيرَٰتِ صُبْحًۭا",
+      "urdu_translation": "پھر صبح کے وقت دھاوا بولنے والوں کی قسم",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "And the chargers at dawn,"
+    },
+    {
+      "number": 4,
+      "arabic": "فَأَثَرْنَ بِهِۦ نَقْعًۭا",
+      "urdu_translation": "پس اس وقت گرد وغبار اڑاتے ہیں",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "Stirring up thereby [clouds of] dust,"
+    },
+    {
+      "number": 5,
+      "arabic": "فَوَسَطْنَ بِهِۦ جَمْعًا",
+      "urdu_translation": "پھر اسی کے ساتھ فوجیوں کے درمیان گھس جاتے ہیں",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "Arriving thereby in the center collectively,"
+    },
+    {
+      "number": 6,
+      "arabic": "إِنَّ ٱلْإِنسَٰنَ لِرَبِّهِۦ لَكَنُودٌۭ",
+      "urdu_translation": "یقیناً انسان اپنے رب کا بڑا ناشکرا ہے",
+      "recitation": "assets/audio/recitation/006.mp3",
+      "urdu_audio": "assets/audio/urdu/006.mp3",
+      "transliteration": null,
+      "english_translation": "Indeed mankind, to his Lord, is ungrateful."
+    },
+    {
+      "number": 7,
+      "arabic": "وَإِنَّهُۥ عَلَىٰ ذَٰلِكَ لَشَهِيدٌۭ",
+      "urdu_translation": "اور یقیناً وه خود بھی اس پر گواه ہے",
+      "recitation": "assets/audio/recitation/007.mp3",
+      "urdu_audio": "assets/audio/urdu/007.mp3",
+      "transliteration": null,
+      "english_translation": "And indeed, he is to that a witness."
+    },
+    {
+      "number": 8,
+      "arabic": "وَإِنَّهُۥ لِحُبِّ ٱلْخَيْرِ لَشَدِيدٌ",
+      "urdu_translation": "یہ مال کی محنت میں بھی بڑا سخت ہے",
+      "recitation": "assets/audio/recitation/008.mp3",
+      "urdu_audio": "assets/audio/urdu/008.mp3",
+      "transliteration": null,
+      "english_translation": "And indeed he is, in love of wealth, intense."
+    },
+    {
+      "number": 9,
+      "arabic": "۞ أَفَلَا يَعْلَمُ إِذَا بُعْثِرَ مَا فِى ٱلْقُبُورِ",
+      "urdu_translation": "کیا اسے وه وقت معلوم نہیں جب قبروں میں جو (کچھ) ہے نکال لیا جائے گا",
+      "recitation": "assets/audio/recitation/009.mp3",
+      "urdu_audio": "assets/audio/urdu/009.mp3",
+      "transliteration": null,
+      "english_translation": "But does he not know that when the contents of the graves are scattered"
+    },
+    {
+      "number": 10,
+      "arabic": "وَحُصِّلَ مَا فِى ٱلصُّدُورِ",
+      "urdu_translation": "اور سینوں کی پوشیده باتیں ظاہر کر دی جائیں گی",
+      "recitation": "assets/audio/recitation/010.mp3",
+      "urdu_audio": "assets/audio/urdu/010.mp3",
+      "transliteration": null,
+      "english_translation": "And that within the breasts is obtained,"
+    },
+    {
+      "number": 11,
+      "arabic": "إِنَّ رَبَّهُم بِهِمْ يَوْمَئِذٍۢ لَّخَبِيرٌۢ",
+      "urdu_translation": "بیشک ان کا رب اس دن ان کے حال سے پورا باخبر ہوگا",
+      "recitation": "assets/audio/recitation/011.mp3",
+      "urdu_audio": "assets/audio/urdu/011.mp3",
+      "transliteration": null,
+      "english_translation": "Indeed, their Lord with them, that Day, is [fully] Acquainted."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/100/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/100/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

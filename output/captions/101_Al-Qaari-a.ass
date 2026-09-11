@@ -1,0 +1,28 @@
+[Script Info]
+Title: Surah 101 - Al-Qaari'a
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Arabic,Amiri Quran,48,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+Style: Urdu,Noto Nastaliq Urdu,42,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+Dialogue: 0,0:00:00.16,0:00:02.09,Arabic,,0,0,0,,ٱلْقَارِعَةُ
+Dialogue: 0,0:00:02.29,0:00:04.19,Arabic,,0,0,0,,مَا ٱلْقَارِعَةُ
+Dialogue: 0,0:00:04.39,0:00:08.94,Arabic,,0,0,0,,وَمَآ أَدْرَىٰكَ مَا ٱلْقَارِعَةُ
+Dialogue: 0,0:00:09.14,0:00:15.43,Arabic,,0,0,0,,يَوْمَ يَكُونُ ٱلنَّاسُ كَٱلْفَرَاشِ ٱلْمَبْثُوثِ
+Dialogue: 0,0:00:15.63,0:00:21.78,Arabic,,0,0,0,,وَتَكُونُ ٱلْجِبَالُ كَٱلْعِهْنِ ٱلْمَنفُوشِ
+Dialogue: 0,0:00:21.98,0:00:26.65,Arabic,,0,0,0,,فَأَمَّا مَن ثَقُلَتْ مَوَٰزِينُهُۥ
+Dialogue: 0,0:00:26.85,0:00:30.01,Arabic,,0,0,0,,فَهُوَ فِى عِيشَةٍۢ رَّاضِيَةٍۢ
+Dialogue: 0,0:00:30.21,0:00:34.34,Arabic,,0,0,0,,وَأَمَّا مَنْ خَفَّتْ مَوَٰزِينُهُۥ
+Dialogue: 0,0:00:34.54,0:00:37.38,Arabic,,0,0,0,,فَأُمُّهُۥ هَاوِيَةٌۭ
+Dialogue: 0,0:00:37.58,0:00:41.26,Arabic,,0,0,0,,وَمَآ أَدْرَىٰكَ مَا هِيَهْ
+Dialogue: 0,0:00:41.46,0:00:45.56,Arabic,,0,0,0,,نَارٌ حَامِيَةٌۢ

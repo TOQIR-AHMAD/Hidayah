@@ -1,0 +1,117 @@
+{
+  "surah_number": 101,
+  "name_arabic": "القَارِعَة",
+  "name_english": "Al-Qaari'a",
+  "name_urdu": "القَارِعَة",
+  "ayah_count": 11,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "ٱلْقَارِعَةُ",
+      "urdu_translation": "کھڑکھڑا دینے والی",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "The Striking Calamity -"
+    },
+    {
+      "number": 2,
+      "arabic": "مَا ٱلْقَارِعَةُ",
+      "urdu_translation": "کیا ہے وه کھڑکھڑا دینے والی",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "What is the Striking Calamity?"
+    },
+    {
+      "number": 3,
+      "arabic": "وَمَآ أَدْرَىٰكَ مَا ٱلْقَارِعَةُ",
+      "urdu_translation": "تجھے کیا معلوم کہ وه کھڑ کھڑا دینے والی کیا ہے",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "And what can make you know what is the Striking Calamity?"
+    },
+    {
+      "number": 4,
+      "arabic": "يَوْمَ يَكُونُ ٱلنَّاسُ كَٱلْفَرَاشِ ٱلْمَبْثُوثِ",
+      "urdu_translation": "جس دن انسان بکھرے ہوئے پروانوں کی طرح ہو جائیں گے",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "It is the Day when people will be like moths, dispersed,"
+    },
+    {
+      "number": 5,
+      "arabic": "وَتَكُونُ ٱلْجِبَالُ كَٱلْعِهْنِ ٱلْمَنفُوشِ",
+      "urdu_translation": "اور پہاڑ دھنے ہوئے رنگین اون کی طرح ہو جائیں گے",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "And the mountains will be like wool, fluffed up."
+    },
+    {
+      "number": 6,
+      "arabic": "فَأَمَّا مَن ثَقُلَتْ مَوَٰزِينُهُۥ",
+      "urdu_translation": "پھر جس کے پلڑے بھاری ہوں گے",
+      "recitation": "assets/audio/recitation/006.mp3",
+      "urdu_audio": "assets/audio/urdu/006.mp3",
+      "transliteration": null,
+      "english_translation": "Then as for one whose scales are heavy [with good deeds],"
+    },
+    {
+      "number": 7,
+      "arabic": "فَهُوَ فِى عِيشَةٍۢ رَّاضِيَةٍۢ",
+      "urdu_translation": "وه تو دل پسند آرام کی زندگی میں ہوگا",
+      "recitation": "assets/audio/recitation/007.mp3",
+      "urdu_audio": "assets/audio/urdu/007.mp3",
+      "transliteration": null,
+      "english_translation": "He will be in a pleasant life."
+    },
+    {
+      "number": 8,
+      "arabic": "وَأَمَّا مَنْ خَفَّتْ مَوَٰزِينُهُۥ",
+      "urdu_translation": "اور جس کے پلڑے ہلکے ہوں گے",
+      "recitation": "assets/audio/recitation/008.mp3",
+      "urdu_audio": "assets/audio/urdu/008.mp3",
+      "transliteration": null,
+      "english_translation": "But as for one whose scales are light,"
+    },
+    {
+      "number": 9,
+      "arabic": "فَأُمُّهُۥ هَاوِيَةٌۭ",
+      "urdu_translation": "اس کا ٹھکانا ہاویہ ہے",
+      "recitation": "assets/audio/recitation/009.mp3",
+      "urdu_audio": "assets/audio/urdu/009.mp3",
+      "transliteration": null,
+      "english_translation": "His refuge will be an abyss."
+    },
+    {
+      "number": 10,
+      "arabic": "وَمَآ أَدْرَىٰكَ مَا هِيَهْ",
+      "urdu_translation": "تجھے کیا معلوم کہ وه کیا ہے",
+      "recitation": "assets/audio/recitation/010.mp3",
+      "urdu_audio": "assets/audio/urdu/010.mp3",
+      "transliteration": null,
+      "english_translation": "And what can make you know what that is?"
+    },
+    {
+      "number": 11,
+      "arabic": "نَارٌ حَامِيَةٌۢ",
+      "urdu_translation": "وه تند وتیز آگ (ہے)",
+      "recitation": "assets/audio/recitation/011.mp3",
+      "urdu_audio": "assets/audio/urdu/011.mp3",
+      "transliteration": null,
+      "english_translation": "It is a Fire, intensely hot."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/101/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/101/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}
