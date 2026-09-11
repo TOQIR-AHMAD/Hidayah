@@ -10,6 +10,9 @@ project:
   name: "Surah Al-Fatihah"
   # Base name used for output/<slug>.mp4, .jpg, .srt
   slug: "001_Al-Fatihah"
+  # Which of the 114 surahs this config renders. fetch-text and fetch-audio
+  # read it, and `validate` checks the data file against it.
+  surah: 1
 
 # ----------------------------------------------------------------------------
 # Paths (relative to the project root)

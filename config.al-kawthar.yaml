@@ -1,0 +1,599 @@
+# ============================================================================
+#  Quran Video Generator - Surah Al-Kawthar (108)
+#
+#  3 ayahs. In the mushaf they are numbered 6205-6207, which is what the recitation CDN indexes
+#  by; on screen and in assets/audio they are 1-3.
+#
+#  Generated from config.yaml by `python run.py new-surah 108`.
+#  Everything not listed above is shared with that file on purpose.
+
+project:
+  name: "Surah Al-Kawthar"
+  # Base name used for output/<slug>.mp4, .jpg, .srt
+  slug: "108_Al-Kawthar"
+  # Which of the 114 surahs this config renders. fetch-text and fetch-audio
+  # read it, and `validate` checks the data file against it.
+  surah: 108
+
+# ----------------------------------------------------------------------------
+# Paths (relative to the project root)
+# ----------------------------------------------------------------------------
+paths:
+  data_file: "data/al_kawthar.json"
+  fonts_dir: "assets/fonts"
+  backgrounds_dir: "assets/backgrounds"
+  branding_dir: "assets/branding"
+  recitation_dir: "assets/audio/recitation/108"
+  urdu_dir: "assets/audio/urdu/108"
+  output_dir: "output"
+  temp_dir: "temp"
+  logs_dir: "logs"
+
+# ----------------------------------------------------------------------------
+# Final render settings (python run.py render)
+# ----------------------------------------------------------------------------
+video:
+  width: 1920
+  height: 1080
+  fps: 30
+  video_codec: "libx264"
+  crf: 18                 # 16-20 is visually excellent; lower = bigger file
+  preset: "medium"        # ultrafast..veryslow. "slow" gives a smaller
+                          # file for the same quality, and takes ~2x longer.
+  pixel_format: "yuv420p" # required for broad YouTube/browser compatibility
+  audio_codec: "aac"
+  audio_bitrate: "192k"
+  audio_sample_rate: 48000
+  faststart: true         # move the MP4 index to the front (better streaming)
+  threads: 0              # 0 = let FFmpeg decide
+
+  # Speed of the finished file. 1.0 renders at natural pace and leaves the
+  # audio bit-for-bit untouched. Above 1.0 the whole timeline is compressed and
+  # the clips are re-timed with atempo, which changes tempo WITHOUT transposing
+  # the voice - but it is still a change to the recording, so set it
+  # deliberately. Range 0.5 to 2.0.
+  playback_speed: 1.25
+
+# ----------------------------------------------------------------------------
+# Fast preview settings (python run.py preview)
+# ----------------------------------------------------------------------------
+preview:
+  width: 640
+  height: 360
+  fps: 24
+  crf: 30
+  preset: "veryfast"
+  audio_bitrate: "96k"
+  # Limit the preview to the first N ayahs (0 = all 7). Keeps iteration fast.
+  max_ayahs: 0
+
+# ----------------------------------------------------------------------------
+# Audio
+# ----------------------------------------------------------------------------
+audio:
+  # "per_ayah"    -> assets/audio/recitation/001.mp3 ... 007.mp3
+  # "full_surah"  -> assets/audio/recitation/al_fatihah.mp3 + timings below
+  # "auto"        -> prefer per-ayah files, fall back to the full-surah file
+  recitation_mode: "auto"
+
+  full_surah_file: "al_kawthar.mp3"
+
+  # Only used when recitation_mode resolves to "full_surah".
+  # Start/end time of each ayah inside the single recording, in seconds.
+  # These MUST be verified against your own recording - measure them once and
+  # write them down here. Leave the list empty to force per-ayah mode.
+  full_surah_timings: []
+  # Example:
+  # full_surah_timings:
+  #   - {ayah: 1, start: 0.00,  end: 6.40}
+  #   - {ayah: 2, start: 6.40,  end: 12.10}
+
+  # Accepted audio container extensions, in priority order.
+  extensions: ["mp3", "wav", "m4a", "ogg", "flac"]
+
+  # Silence around each recitation, in seconds (before playback_speed).
+  #
+  # These three add up to the pause between one ayah's recitation ending and
+  # the next one starting. Kept tight here so the recitation runs continuously:
+  #   (padding_after + gap_between_ayahs + padding_before) / playback_speed
+  #   = (0.20 + 0.00 + 0.20) / 1.25 = 0.32 s
+  padding_before: 0.20
+  padding_after: 0.20
+
+  # Extra breathing room between ayahs. 0 keeps the recitation continuous.
+  gap_between_ayahs: 0.00
+
+  # Floor on how long a section stays on screen, in seconds. The audio still
+  # drives the timing - these only extend a section whose clip is so short that
+  # the viewer could not finish reading, and the extra time is trailing silence.
+  # Set both to 0 to follow the audio durations exactly.
+  min_arabic_seconds: 0.0
+  min_urdu_seconds: 6.5
+
+  # Spoken Urdu translation.
+  #
+  # OFF here on purpose. The only freely published Urdu ayah-by-ayah narration
+  # (Shamshad Ali Khan) recites Fateh Muhammad Jalandhry's wording - "خدا",
+  # "سزاوار" - which does not match the Junagarhi text shown on screen, and no
+  # narration of Junagarhi exists. Rather than have the voice contradict the
+  # text, the translation is shown silently.
+  #
+  # Set this to true to bring the narration back; `validate` will then require
+  # assets/audio/urdu/001.mp3 ... 007.mp3 again.
+  urdu_narration: false
+
+  # With no narration, the Urdu card is held for as long as it takes to READ:
+  # this many seconds per word, floored by min_urdu_seconds above.
+  urdu_seconds_per_word: 0.42
+
+  # Technical loudness matching only. This applies a single constant gain
+  # per file - it never compresses, re-times or re-pitches the recitation.
+  normalize: true
+  target_lufs: -16.0
+  max_gain_db: 12.0        # safety clamp
+  true_peak_ceiling_db: -1.5
+
+  # Gentle fades at the very edges of each clip to avoid clicks (seconds).
+  clip_fade_in: 0.08
+  clip_fade_out: 0.18
+
+  # Optional ambience bed. OFF by default so the authentic recitation is
+  # always the primary audio.
+  ambience:
+    enabled: false
+    file: "assets/audio/ambience.mp3"
+    volume_db: -30.0
+    fade: 3.0
+
+# ----------------------------------------------------------------------------
+# What the video is made of
+# ----------------------------------------------------------------------------
+content:
+  # Show the Urdu translation card after each ayah.
+  #
+  # OFF here: this build is Arabic text plus recitation only. Turning it on
+  # brings the translation cards back (and `audio.urdu_narration` then decides
+  # whether they are also spoken).
+  urdu_translation: false
+
+  # Show the closing card (the "surah complete" line and the credits).
+  #
+  # OFF here. The outro still runs for a moment as background only, so the
+  # video fades out rather than cutting dead on the last syllable. The reciter
+  # is still credited in the MP4 metadata. Set animation.outro_duration to 0
+  # to remove the tail entirely.
+  outro_card: false
+
+  # Light up the word being recited, as the reciter reaches it.
+  word_highlight: true
+
+# ----------------------------------------------------------------------------
+# Per-word recitation timings (for content.word_highlight)
+# ----------------------------------------------------------------------------
+# These are published measurements of WHEN each word is said in a recitation.
+# They are metadata, not audio: nothing here downloads, replaces or alters the
+# recording in assets/audio.
+#
+#   python run.py fetch-word-timings
+#
+# writes data/word_timings.json. Every ayah in it is checked against the text
+# in data/al_fatihah.json and against the real length of its audio file before
+# it is used; anything that does not match is estimated from letter counts
+# instead, and `validate` says which ayahs those are.
+word_timings:
+  file: "data/word_timings_108.json"
+
+  # 7 is Mishary Rashid Alafasy - the reciter the shipped audio_sources
+  # template points at, so the timings and the recording are the same
+  # performance. Change BOTH together if you change reciter; the full list is
+  # at https://api.quran.com/api/v4/resources/recitations
+  recitation_id: 7
+  reciter_name: "Mishary Rashid Alafasy"
+  url_template: "https://api.quran.com/api/v4/recitations/{recitation_id}/by_chapter/{surah}?per_page=300&fields=segments"
+
+  # A highlight shorter than this reads as a flicker, so a very short word
+  # holds a little longer - into the gap before the next word starts.
+  min_seconds: 0.16
+
+  # How much of the silence after a word the highlight carries over into.
+  # 0 drops it the instant the word ends; 1 holds it until the next begins.
+  carry_over: 0.65
+
+# ----------------------------------------------------------------------------
+# Reciter / source credits. Shown in the outro and stored in the MP4 metadata.
+# ----------------------------------------------------------------------------
+reciter:
+  name: "Mishary Rashid Alafasy"
+  source: "Islamic Network CDN (cdn.islamic.network), the audio service behind the
+    AlQuran Cloud API - verse-by-verse murattal, edition ar.alafasy"
+  license: "Published by Islamic Network for use in Quran applications. Quran
+    recitation is distributed for da'wah and study; confirm the reciter's terms
+    before monetising or re-licensing."
+  # Set to true once YOU have confirmed you may publish these recordings on your
+  # own channel. Leaving it false only produces a warning - it never blocks a render.
+  rights_confirmed: false
+
+translation_credit:
+  urdu_translator: "Muhammad Junagarhi"
+  urdu_narrator: ""
+
+# ----------------------------------------------------------------------------
+# Opt-in recitation downloader (python run.py fetch-audio).
+# Nothing is ever downloaded automatically - `enabled` plus the explicit
+# --accept-source-license flag are both required.
+# ----------------------------------------------------------------------------
+audio_sources:
+  enabled: true
+  # {ayah} and {ayah:03d} are substituted.
+  #
+  # Note: this CDN indexes by the GLOBAL ayah number (1-6236). Surah Al-Fatihah
+  # occupies global 1-7, so for this project the global and local numbers are the
+  # same. That equivalence would NOT hold for any other surah.
+  #
+  # To use a different reciter, swap the edition id. Verified working ids:
+  #   ar.alafasy  ar.husary  ar.minshawi  ar.mahermuaiqly
+  # Browse them all at: https://api.alquran.cloud/v1/edition?format=audio
+  recitation_url_template: "https://cdn.islamic.network/quran/audio/128/ar.alafasy/{global_ayah}.mp3"
+  urdu_url_template: ""
+
+# ----------------------------------------------------------------------------
+# Fonts. Put font files in assets/fonts/.
+# `python run.py fonts` downloads the SIL OFL fonts listed below.
+# ----------------------------------------------------------------------------
+fonts:
+  # Main Quran font. AmiriQuran-Regular is designed for fully-vowelled text.
+  arabic: "AmiriQuran-Regular.ttf"
+  arabic_fallbacks: ["Amiri-Regular.ttf", "ScheherazadeNew-Regular.ttf", "arial.ttf"]
+
+  # Arabic headings (surah name, outro line) - a slightly heavier face.
+  arabic_display: "Amiri-Bold.ttf"
+  arabic_display_fallbacks: ["Amiri-Regular.ttf", "AmiriQuran-Regular.ttf", "arial.ttf"]
+
+  # Urdu Nastaliq.
+  urdu: "NotoNastaliqUrdu-Regular.ttf"
+  urdu_fallbacks: ["NotoNastaliqUrdu[wght].ttf", "Amiri-Regular.ttf", "arial.ttf"]
+
+  # Latin / English.
+  #
+  # Inter for the iOS style: it was drawn as an open counterpart to SF Pro,
+  # which is Apple's own and not redistributable, so this is as close as a
+  # licensed font gets. Switch to CormorantGaramond-Regular.ttf with
+  # theme.style "classic" - the serif suits the ornate treatment.
+  latin: "Inter-Regular.ttf"
+  latin_fallbacks: ["Inter[opsz,wght].ttf", "CormorantGaramond-Regular.ttf", "segoeui.ttf", "arial.ttf"]
+
+  # Also search the Windows/macOS/Linux system font directories as a last resort.
+  use_system_fonts: true
+
+# ----------------------------------------------------------------------------
+# Theme - colours, sizes, spacing
+# ----------------------------------------------------------------------------
+theme:
+  # "glass"   - text set straight over your own artwork, in frosted capsules,
+  #             closing with a hairline and a rosette. Designed around a
+  #             background image: put yours in assets/backgrounds/.
+  # "ios"     - iOS dark mode: a rounded grouped panel, a pill badge for the
+  #             ayah number, hairline separators, no glow, no ornament.
+  # "classic" - the ornate treatment: gold hairline frame with corner
+  #             ornaments, eight-point star medallion, diamond rule.
+  #
+  # Only the furniture changes; every colour and size below applies to all.
+  style: "glass"
+
+  # Palette (hex). Apple's own dark-mode system colours, so the video reads as
+  # a native iOS screen: pure black ground, systemGray6 surfaces, systemBlue
+  # accent, label / secondaryLabel text.
+  #
+  # NOTE ON TYPE: iOS itself is set in SF Pro, which Apple licenses for use on
+  # Apple platforms only and does not permit redistributing. The Latin text
+  # here is Inter - drawn as an open counterpart to it, under the SIL OFL. The
+  # Quranic Arabic stays in Amiri Quran whichever style is chosen: it is the
+  # font with the full set of Quranic marks, and the text has to be right
+  # before it has to be fashionable.
+  # Everything in the glass treatment is white over the artwork, so the
+  # background/deep colours only show if no artwork is supplied.
+  background_color: "#3E7BC4"
+  deep_color: "#8FBBE8"
+  accent_color: "#FFFFFF"
+  accent_soft_color: "#FFFFFF"
+  text_color: "#FFFFFF"
+  text_secondary_color: "#EAF2FB"
+  urdu_text_color: "#FFFFFF"
+  muted_color: "#D5E3F3"
+
+  # iOS furniture. Ignored when style is "classic".
+  panel_color: "#1C1C1E"         # systemGray6 (dark)
+  panel_opacity: 0.55
+  panel_radius: 0.026            # of frame height
+  panel_pad_x: 0.045
+  panel_pad_y: 0.075
+  panel_border_color: "#38383A"  # separator (dark)
+  panel_border_opacity: 0.65
+  panel_border_width: 2
+
+  badge_color: "#0A84FF"
+  badge_opacity: 0.22
+  badge_text_color: "#5AB6FF"   # systemBlue lightened, so it reads on the fill
+  badge_height: 0.062
+  badge_pad_x: 0.62
+
+  separator_color: "#FFFFFF"
+  separator_opacity: 0.55
+  separator_width: 2
+
+  # Frosted capsules - the chips carrying "SURAH 001" and the surah name.
+  chip_color: "#FFFFFF"
+  chip_opacity: 0.14
+  chip_border_color: "#FFFFFF"
+  chip_border_opacity: 0.38
+  chip_border_width: 2
+  chip_pad_x: 1.05             # of the chip text's own height
+  chip_pad_y: 0.62
+  chip_radius: 0.5             # 0.5 = fully rounded ends
+  chip_rule_width: 0.11        # hairline either side of the top chip
+  chip_rule_gap: 0.022
+
+  # The hairline-and-rosette that closes the block.
+  ornament_enabled: true
+  ornament_size: 0.034
+  ornament_rule_width: 0.20
+  ornament_opacity: 0.55
+
+  # White type over a photograph loses its edges wherever the picture goes
+  # pale, so it carries a soft shadow rather than a glow.
+  text_shadow_enabled: true
+  text_shadow_color: "#0B2A4A"
+  text_shadow_opacity: 0.38
+  text_shadow_blur: 18
+  text_shadow_offset: 4
+
+  # Safe margins as a fraction of frame width/height.
+  margin_x: 0.085
+  margin_y: 0.095
+
+  # Font sizes are expressed as a fraction of the frame HEIGHT so the layout
+  # scales identically at 1080p and at 360p preview.
+  size_arabic_max: 0.150     # upper bound for the auto-fitter
+  size_arabic_min: 0.050     # lower bound
+  # An ayah longer than one screen is split across screens rather than shrunk
+  # below this size: the words that fit are shown while they are recited, then
+  # the card turns and the reciter carries straight on. 0 switches it off and
+  # squeezes every ayah onto one card, however small that has to be.
+  size_arabic_page_min: 0.075
+  size_urdu_max: 0.088
+  size_urdu_min: 0.030
+  size_surah_label: 0.034
+  size_ayah_label: 0.030
+  size_section_label: 0.036
+  size_intro_arabic: 0.190
+  size_intro_latin: 0.062
+  size_outro_arabic: 0.080
+  size_credit: 0.027
+
+  # Line spacing multipliers (x font size)
+  line_spacing_arabic: 1.62
+  line_spacing_urdu: 1.95
+
+  # Maximum lines before the auto-fitter shrinks the text further.
+  max_lines_arabic: 4
+  max_lines_urdu: 4
+
+  # Text block width as a fraction of the usable (margined) width.
+  text_width_ratio: 0.94
+
+  # Soft glow behind the main text. iOS does not glow text, so this is very
+  # low here - just enough to lift the Arabic off the panel.
+  glow_enabled: false
+  glow_radius: 18
+  glow_opacity: 0.10
+
+  # The word currently being recited.
+  #
+  # The word itself turns amber - no capsule, no box, nothing drawn around it.
+  # The lit word is drawn over the card's own glyphs from the same shaping
+  # run, so it covers them exactly and has to stay opaque.
+  highlight_color: "#FFD24A"
+
+  # A warm glow of the same colour, so the word lifts off the artwork without
+  # needing a shape behind it.
+  highlight_glow_enabled: true
+  highlight_glow_radius: 20
+  highlight_glow_opacity: 0.42
+
+  # Seconds for the colour to arrive and to leave (before playback_speed).
+  # Consecutive words overlap by this much, so the colour flows along the line
+  # instead of jumping. 0 gives a hard cut.
+  highlight_fade: 0.14
+
+  # The capsule behind the lit word. OFF: the colour alone marks the word.
+  highlight_pill_enabled: false
+  highlight_pill_color: "#FFFFFF"
+  highlight_pill_opacity: 0.30
+  highlight_pill_pad_x: 0.16
+  highlight_pill_pad_y: 0.10
+  highlight_pill_radius: 0.5
+
+  # In "ios" this becomes a rounded container; in "classic", a gold rule with
+  # corner ornaments.
+  frame_enabled: false
+  frame_opacity: 0.42
+  frame_inset: 0.045          # fraction of the shorter side
+  frame_line_width: 2
+  corner_ornament: true
+
+  # Divider under the Arabic block.
+  divider_enabled: true
+  divider_width_ratio: 0.26
+  divider_opacity: 0.55
+
+  # Ayah-number medallion (eight-point star with the ayah number inside).
+  medallion_enabled: true
+  medallion_size: 0.085       # fraction of frame height
+
+  # Vignette strength applied by FFmpeg (0 = off, 1 = strong).
+  #
+  # Off for the glass style. The vignette and the grade below exist to push a
+  # GENERATED backdrop back so the text wins; run over finished artwork they
+  # just darken and dull it - at 0.42 the plate came out noticeably murkier
+  # than the file on disk. The text is kept legible by its shadow instead.
+  vignette: 0.0
+
+  # Subtle colour grade. Neutral here, for the same reason: the artwork is
+  # already graded, and re-grading it is a change the designer did not ask for.
+  grade_contrast: 1.0
+  grade_saturation: 1.0
+  grade_brightness: 0.0
+
+  # Optional logo (assets/branding/logo.png). Shown small in the outro.
+  logo_file: "logo.png"
+  logo_enabled: true
+  logo_height: 0.10
+  logo_opacity: 0.9
+
+  # Channel name shown in the outro. Keep it tasteful. Empty = hidden.
+  channel_name: ""
+  channel_tagline: ""
+
+# ----------------------------------------------------------------------------
+# Background
+# ----------------------------------------------------------------------------
+background:
+  # "auto"      -> first supported file found in assets/backgrounds/, otherwise
+  #                a procedurally generated Islamic-geometry backdrop
+  # "generated" -> always generate
+  # or a file name inside assets/backgrounds/ (jpg, png, webp, mp4, mov, mkv)
+  # Named explicitly, not "auto": assets/backgrounds/ also holds the composed
+  # reference design (the one with the text already on it), and "auto" takes
+  # the first file it finds - which would put a second set of text on screen.
+  source: "al-fatihah without text.png"
+
+  # Slow camera move applied to still backgrounds.
+  ken_burns: true
+  zoom_start: 1.00
+  zoom_end: 1.11
+  pan_x: 0.020      # fraction of width drifted over the whole video
+  pan_y: -0.014
+
+  # Dim the background so the text always dominates.
+  #
+  # Kept light for the glass style: the artwork IS the design, so it is shown
+  # close to as supplied. The white type carries a soft shadow instead
+  # (theme.text_shadow_*), which holds its edges without flattening the
+  # picture. Raise this if your artwork is busy behind the centre of frame.
+  dim: 0.12         # 0 = untouched, 1 = black
+  blur: 0           # gaussian sigma, 0 = off
+
+  # Video backgrounds
+  loop_video: true
+  video_mute: true
+
+  # Generated backdrop options (used when no user background is supplied)
+  generated:
+    pattern_scale: 300
+    pattern_opacity: 0.130
+    glow_opacity: 0.62
+    grain: 0.020
+
+# ----------------------------------------------------------------------------
+# Animation. All durations are in seconds.
+# ----------------------------------------------------------------------------
+animation:
+  speed: 1.0                 # global multiplier (0.5 = slower, 2.0 = faster)
+  # These are the seconds BEFORE playback_speed is applied, so at 1.25x the
+  # intro below is on screen for 4.0 / 1.25 = 3.2 s.
+
+  transition_duration: 0.45  # quiet beat between one card and the next
+
+  # Kept at or below audio.padding_before, so the card is already at full
+  # opacity when the reciter starts. The word highlight is only allowed to
+  # appear over an opaque card - a longer fade here would swallow the first
+  # word of every ayah, which at this padding is often under half a second.
+  text_fade_in: 0.20
+  text_fade_out: 0.55
+  # A dissolve is never squeezed below this, even when the padding leaves no
+  # room for it. Anything shorter reads as a hard cut, so past this point the
+  # fade is allowed to begin a moment before the clip ends instead.
+  min_text_fade_out: 0.30
+  text_rise: 16              # pixels the text drifts upward as it appears
+  text_rise_duration: 1.40
+
+  # 0 = no title card, the video opens straight on ayah 1.
+  intro_duration: 0.0
+  # The opening fade of the whole video. With no title card this lands on ayah
+  # 1, so it is kept short for the same reason as text_fade_in above.
+  intro_fade_in: 0.30
+  # With content.outro_card off this is just a short breath of background.
+  outro_duration: 1.5
+  outro_fade_out: 1.20
+
+  # Drifting layers.
+  #
+  # Drift speeds are snapped to a whole number of pixels per second per frame
+  # of video: FFmpeg positions overlays on integer pixels, so a layer moving
+  # less than one pixel per frame sits still for several frames and then jumps,
+  # which reads as stutter. At 30 fps the smooth speeds are therefore 30, 60,
+  # 90 ... px/s. Anything you set here is rounded to the nearest of those (and
+  # never down to zero), so the values below are already exact.
+  pattern_layer_enabled: true
+  pattern_opacity: 0.055
+  pattern_drift_x: 30.0      # px/s = 1 px per frame at 30 fps
+  pattern_drift_y: -30.0
+
+  # Slow-moving soft light. It is tinted with theme.accent_color, which in the
+  # iOS palette is systemBlue - at the old 0.30 that turned the whole backdrop
+  # into a blue wash. Kept low so it reads as depth rather than as a colour.
+  light_enabled: true
+  light_opacity: 0.10
+  light_drift_x: -13.0
+  light_drift_y: 6.0
+
+  # Floating dust / bokeh particles (two layers at different speeds)
+  # Two dust layers at different speeds, so they read as different depths.
+  particles_enabled: true
+  particles_opacity: 0.22
+  particles_drift_x: -30.0   # 1 px per frame
+  particles_drift_y: -30.0
+  particles_drift_x2: 30.0
+  particles_drift_y2: -60.0  # 2 px per frame - the nearer layer
+
+# ----------------------------------------------------------------------------
+# Subtitles
+# ----------------------------------------------------------------------------
+subtitles:
+  enabled: true
+
+  # Where to write them, as a subfolder of output/.
+  #
+  # Players auto-load a subtitle file sitting next to the video with the same
+  # name, so the text appears over the picture during local playback even
+  # though nothing is burned in. VLC also scans ./Subtitles, ./subtitles,
+  # ./Subs and ./subs by default - so "captions" it is. Set to "" to put them
+  # beside the MP4 and let players pick them up.
+  folder: "captions"
+
+  srt: true
+  ass: true
+  # "both" writes Arabic during the recitation and Urdu during the narration.
+  # "arabic" or "urdu" restrict it to one language.
+  content: "both"
+  # Burn subtitles into the video? Usually false for YouTube (soft subs are
+  # better), and the on-screen text already shows the ayah.
+  burn_in: false
+  ass_font_size: 42
+
+# ----------------------------------------------------------------------------
+# Thumbnail (python run.py thumbnail)
+# ----------------------------------------------------------------------------
+thumbnail:
+  width: 1280
+  height: 720
+  quality: 94
+  arabic_text: "الكَوۡثَر"
+  urdu_text: "سورۃ الكَوۡثَر"
+  latin_text: "Surah Al-Kawthar"
+  # Keep this honest: the video shows no Urdu, so it must not promise any.
+  subtitle_text: ""
+  size_arabic: 0.28
+  size_urdu: 0.095
+  size_latin: 0.070
+  size_subtitle: 0.052

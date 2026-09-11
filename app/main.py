@@ -5,6 +5,7 @@
     python run.py render       final 1920x1080 MP4 + thumbnail + subtitles
     python run.py thumbnail    just the 1280x720 thumbnail
     python run.py info         show the computed timeline
+    python run.py new-surah 112 write the config file for another surah
     python run.py fetch-text   download the verified Quran text and translation
     python run.py fonts        download the SIL OFL fonts
     python run.py fetch-audio  opt-in recitation downloader (disabled by default)
@@ -640,6 +641,45 @@ def cmd_subtitles(config: Config, args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_new_surah(config: Config, args: argparse.Namespace) -> int:
+    """Write the config file for another surah, copied from this one."""
+    from app.services import scaffold
+    from app.services.quran_source import SURAH_NAME_URDU, _fetch_surah_meta
+
+    number = args.surah
+    banner(f"Setting up surah {number}", "a new config, copied from config.yaml")
+
+    meta = _fetch_surah_meta(number)
+    english = meta["english"] or f"Surah{number}"
+    arabic = meta["arabic"]
+    urdu = SURAH_NAME_URDU.get(number, f"\u0633\u0648\u0631\u06c3 {arabic}")
+
+    template = args.template or (config.root / "config.yaml")
+    destination = args.output or scaffold.config_path(config.root, english)
+    scaffold.create_config(
+        surah_number=number,
+        english_name=english,
+        arabic_name=arabic,
+        urdu_name=urdu,
+        template=template,
+        destination=destination,
+        force=args.force,
+    )
+
+    name = relative_to_root(destination)
+    console.print(
+        f"\n  Surah {number}: {english} ({arabic}), "
+        f"{surah_index.ayah_count(number)} ayahs\n\n"
+        "Next:\n"
+        f"  python run.py --config {name} fetch-text\n"
+        f"  python run.py --config {name} fetch-audio --accept-source-license\n"
+        f"  python run.py --config {name} fetch-word-timings\n"
+        f"  python run.py --config {name} render"
+    )
+    success(name)
+    return 0
+
+
 def cmd_fetch_text(config: Config, args: argparse.Namespace) -> int:
     from app.services.quran_source import fetch_surah
 
@@ -880,6 +920,18 @@ def build_parser() -> argparse.ArgumentParser:
     sub = add("info", "Print the surah details and the computed timeline")
     sub.add_argument("--no-audio", action="store_true", help="use silent placeholder durations")
 
+    sub = add("new-surah", "Write the config file for another surah")
+    sub.add_argument("surah", type=int, metavar="N", help="which surah, 1-114")
+    sub.add_argument(
+        "--template", type=Path, default=None,
+        help="config to copy from (default: config.yaml)",
+    )
+    sub.add_argument(
+        "--output", type=Path, default=None,
+        help="where to write it (default: config.<surah-name>.yaml)",
+    )
+    sub.add_argument("--force", action="store_true", help="overwrite an existing file")
+
     sub = add("fetch-text", "Download the verified Quran text and Urdu translation")
     sub.add_argument(
         "--surah", type=int, default=0, metavar="N",
@@ -916,6 +968,7 @@ COMMANDS = {
     "thumbnail": cmd_thumbnail,
     "subtitles": cmd_subtitles,
     "info": cmd_info,
+    "new-surah": cmd_new_surah,
     "fetch-text": cmd_fetch_text,
     "fetch-word-timings": cmd_fetch_word_timings,
     "fonts": cmd_fonts,

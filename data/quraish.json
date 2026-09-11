@@ -1,0 +1,54 @@
+{
+  "surah_number": 106,
+  "name_arabic": "قُرَيۡش",
+  "name_english": "Quraish",
+  "name_urdu": "قُرَيۡش",
+  "ayah_count": 4,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "لِإِيلَٰفِ قُرَيْشٍ",
+      "urdu_translation": "قریش کے مانوس کرنے کے لئے",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "For the accustomed security of the Quraysh -"
+    },
+    {
+      "number": 2,
+      "arabic": "إِۦلَٰفِهِمْ رِحْلَةَ ٱلشِّتَآءِ وَٱلصَّيْفِ",
+      "urdu_translation": "(یعنی) انہیں جاڑے اور گرمی کے سفر سے مانوس کرنے کے لئے۔ (اس کے شکریہ میں)",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "Their accustomed security [in] the caravan of winter and summer -"
+    },
+    {
+      "number": 3,
+      "arabic": "فَلْيَعْبُدُوا۟ رَبَّ هَٰذَا ٱلْبَيْتِ",
+      "urdu_translation": "پس انہیں چاہئے کہ اسی گھر کے رب کی عبادت کرتے رہیں",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "Let them worship the Lord of this House,"
+    },
+    {
+      "number": 4,
+      "arabic": "ٱلَّذِىٓ أَطْعَمَهُم مِّن جُوعٍۢ وَءَامَنَهُم مِّنْ خَوْفٍۭ",
+      "urdu_translation": "جس نے انہیں بھوک میں کھانا دیا اور ڈر (اور خوف) میں امن (وامان) دیا",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "Who has fed them, [saving them] from hunger and made them safe, [saving them] from fear."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/106/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/106/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

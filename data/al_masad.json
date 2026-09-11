@@ -1,0 +1,63 @@
+{
+  "surah_number": 111,
+  "name_arabic": "المَسَد",
+  "name_english": "Al-Masad",
+  "name_urdu": "المَسَد",
+  "ayah_count": 5,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "تَبَّتْ يَدَآ أَبِى لَهَبٍۢ وَتَبَّ",
+      "urdu_translation": "ابولہب کے دونوں ہاتھ ٹوٹ گئے اور وه (خود) ہلاک ہو گیا",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "May the hands of Abu Lahab be ruined, and ruined is he."
+    },
+    {
+      "number": 2,
+      "arabic": "مَآ أَغْنَىٰ عَنْهُ مَالُهُۥ وَمَا كَسَبَ",
+      "urdu_translation": "نہ تو اس کا مال اس کے کام آیا اور نہ اس کی کمائی",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "His wealth will not avail him or that which he gained."
+    },
+    {
+      "number": 3,
+      "arabic": "سَيَصْلَىٰ نَارًۭا ذَاتَ لَهَبٍۢ",
+      "urdu_translation": "وه عنقریب بھڑکنے والی آگ میں جائے گا",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "He will [enter to] burn in a Fire of [blazing] flame"
+    },
+    {
+      "number": 4,
+      "arabic": "وَٱمْرَأَتُهُۥ حَمَّالَةَ ٱلْحَطَبِ",
+      "urdu_translation": "اور اس کی بیوی بھی (جائے گی،) جو لکڑیاں ڈھونے والی ہے",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "And his wife [as well] - the carrier of firewood."
+    },
+    {
+      "number": 5,
+      "arabic": "فِى جِيدِهَا حَبْلٌۭ مِّن مَّسَدٍۭ",
+      "urdu_translation": "اس کی گردن میں پوست کھجور کی بٹی ہوئی رسی ہوگی",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "Around her neck is a rope of [twisted] fiber."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/111/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/111/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

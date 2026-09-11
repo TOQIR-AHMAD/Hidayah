@@ -1,0 +1,45 @@
+{
+  "surah_number": 108,
+  "name_arabic": "الكَوۡثَر",
+  "name_english": "Al-Kawthar",
+  "name_urdu": "الكَوۡثَر",
+  "ayah_count": 3,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "إِنَّآ أَعْطَيْنَٰكَ ٱلْكَوْثَرَ",
+      "urdu_translation": "یقیناً ہم نے تجھے (حوض) کوثر (اور بہت کچھ) دیا ہے",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Indeed, We have granted you, [O Muhammad], al-Kawthar."
+    },
+    {
+      "number": 2,
+      "arabic": "فَصَلِّ لِرَبِّكَ وَٱنْحَرْ",
+      "urdu_translation": "پس تو اپنے رب کے لئے نماز پڑھ اور قربانی کر",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "So pray to your Lord and sacrifice [to Him alone]."
+    },
+    {
+      "number": 3,
+      "arabic": "إِنَّ شَانِئَكَ هُوَ ٱلْأَبْتَرُ",
+      "urdu_translation": "یقیناً تیرا دشمن ہی لاوارث اور بے نام ونشان ہے",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "Indeed, your enemy is the one cut off."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/108/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/108/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

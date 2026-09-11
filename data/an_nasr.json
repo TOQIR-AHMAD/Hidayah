@@ -1,0 +1,45 @@
+{
+  "surah_number": 110,
+  "name_arabic": "النَّصۡر",
+  "name_english": "An-Nasr",
+  "name_urdu": "النَّصۡر",
+  "ayah_count": 3,
+  "revelation_place": "Madinah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "إِذَا جَآءَ نَصْرُ ٱللَّهِ وَٱلْفَتْحُ",
+      "urdu_translation": "جب اللہ کی مدد اور فتح آجائے",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "When the victory of Allah has come and the conquest,"
+    },
+    {
+      "number": 2,
+      "arabic": "وَرَأَيْتَ ٱلنَّاسَ يَدْخُلُونَ فِى دِينِ ٱللَّهِ أَفْوَاجًۭا",
+      "urdu_translation": "اور تو لوگوں کو اللہ کے دین میں جوق در جوق آتا دیکھ لے",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "And you see the people entering into the religion of Allah in multitudes,"
+    },
+    {
+      "number": 3,
+      "arabic": "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَٱسْتَغْفِرْهُ ۚ إِنَّهُۥ كَانَ تَوَّابًۢا",
+      "urdu_translation": "تو اپنے رب کی تسبیح کرنے لگ حمد کے ساتھ اور اس سے مغفرت کی دعا مانگ، بیشک وه بڑا ہی توبہ قبول کرنے والا ہے",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "Then exalt [Him] with praise of your Lord and ask forgiveness of Him. Indeed, He is ever Accepting of repentance."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/110/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/110/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

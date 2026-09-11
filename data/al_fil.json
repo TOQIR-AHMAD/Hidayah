@@ -1,0 +1,63 @@
+{
+  "surah_number": 105,
+  "name_arabic": "الفِيل",
+  "name_english": "Al-Fil",
+  "name_urdu": "الفِيل",
+  "ayah_count": 5,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَٰبِ ٱلْفِيلِ",
+      "urdu_translation": "کیا تو نے نہ دیکھا کہ تیرے رب نے ہاتھی والوں کے ساتھ کیا کیا؟",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Have you not considered, [O Muhammad], how your Lord dealt with the companions of the elephant?"
+    },
+    {
+      "number": 2,
+      "arabic": "أَلَمْ يَجْعَلْ كَيْدَهُمْ فِى تَضْلِيلٍۢ",
+      "urdu_translation": "کیا ان کے مکر کو بےکار نہیں کردیا؟",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "Did He not make their plan into misguidance?"
+    },
+    {
+      "number": 3,
+      "arabic": "وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ",
+      "urdu_translation": "اور ان پر پرندوں کے جھنڈ کے جھنڈ بھیج دیئے",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "And He sent against them birds in flocks,"
+    },
+    {
+      "number": 4,
+      "arabic": "تَرْمِيهِم بِحِجَارَةٍۢ مِّن سِجِّيلٍۢ",
+      "urdu_translation": "جو انہیں مٹی اور پتھر کی کنکریاں مار رہے تھے",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "Striking them with stones of hard clay,"
+    },
+    {
+      "number": 5,
+      "arabic": "فَجَعَلَهُمْ كَعَصْفٍۢ مَّأْكُولٍۭ",
+      "urdu_translation": "پس انہیں کھائے ہوئے بھوسے کی طرح کردیا",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "And He made them like eaten straw."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/105/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/105/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

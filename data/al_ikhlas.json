@@ -1,0 +1,54 @@
+{
+  "surah_number": 112,
+  "name_arabic": "الإِخۡلَاص",
+  "name_english": "Al-Ikhlaas",
+  "name_urdu": "الإِخۡلَاص",
+  "ayah_count": 4,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "قُلْ هُوَ ٱللَّهُ أَحَدٌ",
+      "urdu_translation": "آپ کہہ دیجئے کہ وه اللہ تعالیٰ ایک (ہی) ہے",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Say, \"He is Allah, [who is] One,"
+    },
+    {
+      "number": 2,
+      "arabic": "ٱللَّهُ ٱلصَّمَدُ",
+      "urdu_translation": "اللہ تعالیٰ بے نیاز ہے",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "Allah, the Eternal Refuge."
+    },
+    {
+      "number": 3,
+      "arabic": "لَمْ يَلِدْ وَلَمْ يُولَدْ",
+      "urdu_translation": "نہ اس سے کوئی پیدا ہوا نہ وه کسی سے پیدا ہوا",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "He neither begets nor is born,"
+    },
+    {
+      "number": 4,
+      "arabic": "وَلَمْ يَكُن لَّهُۥ كُفُوًا أَحَدٌۢ",
+      "urdu_translation": "اور نہ کوئی اس کا ہمسر ہے",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "Nor is there to Him any equivalent.\""
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/112/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/112/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

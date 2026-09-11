@@ -82,19 +82,20 @@ The result is a clean Quran video designed for **YouTube and other video platfor
 
 ## Rendering another Surah
 
-Each surah is one config file. To build one:
+Each surah is one config file, and `new-surah` writes it for you - copied from
+`config.yaml`, with only the values that belong to the surah changed:
 
 ```bash
-python run.py --config config.al-baqarah.yaml fetch-text
-python run.py --config config.al-baqarah.yaml fetch-audio --accept-source-license
-python run.py --config config.al-baqarah.yaml fetch-word-timings
-python run.py --config config.al-baqarah.yaml validate
-python run.py --config config.al-baqarah.yaml render
+python run.py new-surah 112                                   # writes config.al-ikhlas.yaml
+python run.py --config config.al-ikhlas.yaml fetch-text
+python run.py --config config.al-ikhlas.yaml fetch-audio --accept-source-license
+python run.py --config config.al-ikhlas.yaml fetch-word-timings
+python run.py --config config.al-ikhlas.yaml validate
+python run.py --config config.al-ikhlas.yaml render
 ```
 
-A new config needs four things changed: `project.surah`, `project.slug`,
-`paths.data_file` and `paths.recitation_dir` (one audio directory per surah,
-since the files inside are numbered by their place in that surah).
+Built so far: **Al-Fatihah (1)**, **Al-Fil (105)** through **An-Nas (114)**, and
+a config for **Al-Baqarah (2)** whose recitation downloads on demand.
 
 **Long surahs.** Al-Fatihah is a single FFmpeg pass — 7 cards and 29 word
 highlights. Al-Baqarah is 286 cards and 6115 highlights, which as one graph

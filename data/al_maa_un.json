@@ -1,0 +1,81 @@
+{
+  "surah_number": 107,
+  "name_arabic": "المَاعُون",
+  "name_english": "Al-Maa'un",
+  "name_urdu": "المَاعُون",
+  "ayah_count": 7,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "أَرَءَيْتَ ٱلَّذِى يُكَذِّبُ بِٱلدِّينِ",
+      "urdu_translation": "کیا تو نے (اسے بھی) دیکھا جو (روز) جزا کو جھٹلاتا ہے؟",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Have you seen the one who denies the Recompense?"
+    },
+    {
+      "number": 2,
+      "arabic": "فَذَٰلِكَ ٱلَّذِى يَدُعُّ ٱلْيَتِيمَ",
+      "urdu_translation": "یہی وه ہے جو یتیم کو دھکے دیتا ہے",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "For that is the one who drives away the orphan"
+    },
+    {
+      "number": 3,
+      "arabic": "وَلَا يَحُضُّ عَلَىٰ طَعَامِ ٱلْمِسْكِينِ",
+      "urdu_translation": "اور مسکین کو کھلانے کی ترغیب نہیں دیتا",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "And does not encourage the feeding of the poor."
+    },
+    {
+      "number": 4,
+      "arabic": "فَوَيْلٌۭ لِّلْمُصَلِّينَ",
+      "urdu_translation": "ان نمازیوں کے لئے افسوس (اور ویل نامی جہنم کی جگہ) ہے",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "So woe to those who pray"
+    },
+    {
+      "number": 5,
+      "arabic": "ٱلَّذِينَ هُمْ عَن صَلَاتِهِمْ سَاهُونَ",
+      "urdu_translation": "جو اپنی نماز سے غافل ہیں",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "[But] who are heedless of their prayer -"
+    },
+    {
+      "number": 6,
+      "arabic": "ٱلَّذِينَ هُمْ يُرَآءُونَ",
+      "urdu_translation": "جو ریاکاری کرتے ہیں",
+      "recitation": "assets/audio/recitation/006.mp3",
+      "urdu_audio": "assets/audio/urdu/006.mp3",
+      "transliteration": null,
+      "english_translation": "Those who make show [of their deeds]"
+    },
+    {
+      "number": 7,
+      "arabic": "وَيَمْنَعُونَ ٱلْمَاعُونَ",
+      "urdu_translation": "اور برتنے کی چیز روکتے ہیں",
+      "recitation": "assets/audio/recitation/007.mp3",
+      "urdu_audio": "assets/audio/urdu/007.mp3",
+      "transliteration": null,
+      "english_translation": "And withhold [simple] assistance."
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/107/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/107/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

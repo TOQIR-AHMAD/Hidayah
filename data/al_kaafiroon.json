@@ -1,0 +1,72 @@
+{
+  "surah_number": 109,
+  "name_arabic": "الكَافِرُون",
+  "name_english": "Al-Kaafiroon",
+  "name_urdu": "الكَافِرُون",
+  "ayah_count": 6,
+  "revelation_place": "Makkah",
+  "ayahs": [
+    {
+      "number": 1,
+      "arabic": "قُلْ يَٰٓأَيُّهَا ٱلْكَٰفِرُونَ",
+      "urdu_translation": "آپ کہہ دیجئے کہ اے کافرو!",
+      "recitation": "assets/audio/recitation/001.mp3",
+      "urdu_audio": "assets/audio/urdu/001.mp3",
+      "transliteration": null,
+      "english_translation": "Say, \"O disbelievers,"
+    },
+    {
+      "number": 2,
+      "arabic": "لَآ أَعْبُدُ مَا تَعْبُدُونَ",
+      "urdu_translation": "نہ میں عبادت کرتا ہوں اس کی جس کی تم عبادت کرتے ہو",
+      "recitation": "assets/audio/recitation/002.mp3",
+      "urdu_audio": "assets/audio/urdu/002.mp3",
+      "transliteration": null,
+      "english_translation": "I do not worship what you worship."
+    },
+    {
+      "number": 3,
+      "arabic": "وَلَآ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ",
+      "urdu_translation": "نہ تم عبادت کرنے والے ہو اس کی جس کی میں عبادت کرتا ہوں",
+      "recitation": "assets/audio/recitation/003.mp3",
+      "urdu_audio": "assets/audio/urdu/003.mp3",
+      "transliteration": null,
+      "english_translation": "Nor are you worshippers of what I worship."
+    },
+    {
+      "number": 4,
+      "arabic": "وَلَآ أَنَا۠ عَابِدٌۭ مَّا عَبَدتُّمْ",
+      "urdu_translation": "اور نہ میں عبادت کروں گا جس کی تم عبادت کرتے ہو",
+      "recitation": "assets/audio/recitation/004.mp3",
+      "urdu_audio": "assets/audio/urdu/004.mp3",
+      "transliteration": null,
+      "english_translation": "Nor will I be a worshipper of what you worship."
+    },
+    {
+      "number": 5,
+      "arabic": "وَلَآ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ",
+      "urdu_translation": "اور نہ تم اس کی عبادت کرنے والے ہو جس کی میں عبادت کر رہا ہوں",
+      "recitation": "assets/audio/recitation/005.mp3",
+      "urdu_audio": "assets/audio/urdu/005.mp3",
+      "transliteration": null,
+      "english_translation": "Nor will you be worshippers of what I worship."
+    },
+    {
+      "number": 6,
+      "arabic": "لَكُمْ دِينُكُمْ وَلِىَ دِينِ",
+      "urdu_translation": "تمہارے لئے تمہارا دین ہے اور میرے لئے میرا دین ہے",
+      "recitation": "assets/audio/recitation/006.mp3",
+      "urdu_audio": "assets/audio/urdu/006.mp3",
+      "transliteration": null,
+      "english_translation": "For you is your religion, and for me is my religion.\""
+    }
+  ],
+  "source": {
+    "arabic_edition": "القرآن الكريم برسم العثماني (uthmani) (Uthmani)",
+    "arabic_source": "https://api.alquran.cloud/v1/surah/109/quran-uthmani",
+    "urdu_edition": "محمد جوناگڑھی (Muhammad Junagarhi)",
+    "urdu_source": "https://api.alquran.cloud/v1/surah/109/ur.junagarhi",
+    "retrieved_at": "2026-09-11",
+    "note": "Quranic Arabic and the Urdu translation are stored verbatim from the editions named above. They are never generated, paraphrased or edited by this application. Verify against a printed mushaf before publishing. English gloss: Saheeh International."
+  }
+}

@@ -1,0 +1,23 @@
+[Script Info]
+Title: Surah 109 - Al-Kaafiroon
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Arabic,Amiri Quran,48,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+Style: Urdu,Noto Nastaliq Urdu,42,&H00FFFFFF,&H000000FF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,2,1,2,163,163,59,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+Dialogue: 0,0:00:00.16,0:00:06.25,Arabic,,0,0,0,,قُلْ يَٰٓأَيُّهَا ٱلْكَٰفِرُونَ
+Dialogue: 0,0:00:06.45,0:00:12.49,Arabic,,0,0,0,,لَآ أَعْبُدُ مَا تَعْبُدُونَ
+Dialogue: 0,0:00:12.69,0:00:19.34,Arabic,,0,0,0,,وَلَآ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ
+Dialogue: 0,0:00:19.54,0:00:24.94,Arabic,,0,0,0,,وَلَآ أَنَا۠ عَابِدٌۭ مَّا عَبَدتُّمْ
+Dialogue: 0,0:00:25.14,0:00:31.96,Arabic,,0,0,0,,وَلَآ أَنتُمْ عَٰبِدُونَ مَآ أَعْبُدُ
+Dialogue: 0,0:00:32.16,0:00:37.24,Arabic,,0,0,0,,لَكُمْ دِينُكُمْ وَلِىَ دِينِ
